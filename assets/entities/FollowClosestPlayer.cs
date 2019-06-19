@@ -11,7 +11,7 @@ public class FollowClosestPlayer : NetworkBehaviour {
     private float m_JumpForce =100;
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;
     [SerializeField]private float focusTimePeriod =3.0f;
-
+    [SerializeField] private float tickTimePeriod = 0.5f;
     [HideInInspector] public bool dead = false;
 
 
@@ -22,10 +22,11 @@ public class FollowClosestPlayer : NetworkBehaviour {
 
 
 
-    private float timeLeft;
+    private float focusTimeLeft;
+    private float tickTimeLeft;
     // Use this for initialization
     void Start() {
-        timeLeft = focusTimePeriod;
+        focusTimeLeft = focusTimePeriod;
     }
 
 
@@ -56,38 +57,47 @@ public class FollowClosestPlayer : NetworkBehaviour {
         }
     }
 
-    GameObject target;
+    public GameObject target;
+
+
 	void Update () {
         if (dead)
             return;
         if(!target)
             target= findClosestTarget();
-        if(target)
-            tick();
 
 
-        timeLeft -= Time.deltaTime;
-        if (timeLeft <= 0f) {
+        tickTimeLeft -= Time.deltaTime;
+        if (tickTimeLeft <= 0f) {
+            if (target)
+                tick();
 
-            timeLeft = focusTimePeriod;
+            tickTimeLeft = tickTimePeriod;
+        }
+
+
+        focusTimeLeft -= Time.deltaTime;
+
+        if (focusTimeLeft <= 0f) {
+            focusTimeLeft = focusTimePeriod;
             target = findClosestTarget();
         }
     }
 
     void tick() {
-        float move = speed;
+
         // if (target.transform.position.x < transform.position.x)//if the object is to the left
-        //    move = -speed;
+           float move = speed;
 
         if (isTargetToTheLeft()) {
-            move = -speed;
-        }
+            move *= -1;
+        } 
 
-
-        Vector3 targetVelocity = (transform.right.normalized * move ) + Vector3.Project((Vector3)(m_Rigidbody2D.velocity), transform.up);
+        //m_Rigidbody2D.AddForce(transform.right.normalized * move);
+       Vector3 targetVelocity = (transform.right.normalized * move ) + Vector3.Project((Vector3)(m_Rigidbody2D.velocity), transform.up);
         m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
-        if (m_Grounded&& m_Rigidbody2D.velocity.x* m_Rigidbody2D.velocity.x < 0.2) {//we hit wall so jump
+        if (m_Grounded && m_Rigidbody2D.velocity.x < 0.3) {//we hit wall so jump
             //Debug.Log("jumping");
             if(animator)
                 animator.SetTrigger("jump");
@@ -104,9 +114,9 @@ public class FollowClosestPlayer : NetworkBehaviour {
 
     private bool isTargetToTheLeft() {
         Vector2 A = transform.up;
-        Vector2 B = target.transform.position;
-        Debug.Log("if negative then left: "+Mathf.Sign( -A.x * B.y + A.y * B.x));
-        return -A.x * B.y + A.y * B.x < 0;
+        Vector2 B= transform.position- target.transform.position;
+
+        return -A.x * B.y + A.y * B.x > 0;
         
     }
 

@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour {
 
         if (bulletHitEffect) {
             Instantiate(bulletHitEffect, transform.position, Quaternion.identity);
-
+            //Debug.Log("bulletImpact effect");
         }
         bounce++;
     }

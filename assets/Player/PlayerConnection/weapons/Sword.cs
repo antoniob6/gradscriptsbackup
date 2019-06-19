@@ -8,7 +8,7 @@ public class Sword : MonoBehaviour {
     public float knockBackForce=200;
     public GameObject sword;
     public GameObject slashingEffect;
-
+    public float coolDownTime = 0.3f;
     private bool active;
 
     private GameObject selecteObject;
@@ -32,16 +32,25 @@ public class Sword : MonoBehaviour {
         //Debug.Log("sword chosen");
     }
 
-
+    private float lastTpTime = 0f;
     private void Update() {
         if (!active)//only run on local player
             return;
-        if (Input.GetMouseButtonDown(0)) {//only local player does this
+
+        if (Input.GetMouseButtonDown(0)&& Time.time - lastTpTime >= coolDownTime) {//only local player does this
             //Debug.Log("slashing sword");
+            lastTpTime = Time.time;
+            AudioManager.instance.play("slashing");
             sword.transform.Rotate(new Vector3(0, 0, -90));
             slashSword();
         } else if (Input.GetMouseButtonUp(0)) {//return sword
-            sword.transform.localRotation = originalRotation;
+            Collider2D PBC = PCO.playerBoundingCollider;
+            if(PBC)
+                sword.transform.localRotation = PBC.transform.rotation;
+        } else if(!Input.GetMouseButton(0)) {//follow player when mouse isn't pressed
+            Collider2D PBC = PCO.playerBoundingCollider;
+            if(PBC)
+                sword.transform.rotation = PBC.transform.rotation;
         }
     }
 

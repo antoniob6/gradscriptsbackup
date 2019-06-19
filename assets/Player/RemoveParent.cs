@@ -9,9 +9,11 @@ public class RemoveParent : MonoBehaviour {
         transform.SetParent(null);
 	}
     private void Update() {
-        if(parent)
+        if (parent) {
             transform.position = parent.position;
-        else {
+            transform.rotation = parent.rotation;
+
+        } else {
             Destroy(gameObject);
         }
     }

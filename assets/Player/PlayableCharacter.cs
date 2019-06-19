@@ -28,18 +28,24 @@ public class PlayableCharacter : NetworkBehaviour {
         if (!spriteRenderer)
             spriteRenderer = GetComponent<SpriteRenderer>();
 
-
+        
 
         if (!spriteRenderer || !rigibodyComp || !animator)
-            Debug.Log("please assign PC componenets manually");
-        Invoke("delayed", 2f);
-        
-    }
-    void delayed() {
-        if(RD)
-             setDisplayName(RD.gameObject.GetComponent<PlayerData>().playerName);
-    }
+            Debug.Log("please assign PC components manually");
+        Invoke("delayedDisplayName", 2f);
 
+    }
+    void delayedDisplayName() {
+        if (RD) {
+            setDisplayName(RD.gameObject.GetComponent<PlayerData>().playerName);
+            setPlayerColor(RD.gameObject.GetComponent<PlayerData>().playerColor);
+        }
+    }
+    public void setPlayerColor(Color newColor) {
+        if (spriteRenderer) {
+            spriteRenderer.color = newColor;
+        }
+    }
 
     public void setDisplayName(string newName) {
             if (playerTextRefernce) {
@@ -89,6 +95,8 @@ public class PlayableCharacter : NetworkBehaviour {
         if (deathEffect) {
             GameObject DE = Instantiate(deathEffect, gameObject.transform.position, transform.rotation);
             DE.transform.parent = transform;
+            AudioManager.instance.play("playerDied");
+            
         } else {
             Debug.Log("player death effect not assigned");
         }

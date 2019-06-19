@@ -60,10 +60,26 @@ public class JumpQuest : Quest
             }
         }
 
-
-
         if (isComplete)
             return;
+
+    }
+
+    public override string getMessage(PlayerData PD =null) {
+        if(PD == null)
+            return base.getMessage(PD);
+        if(jumpCount - PD.roundJumpCount>0)
+            return "be the first to jump " + (jumpCount -PD.roundJumpCount) + " times";
+        return "be the first to jump " + 0 + " times";
+    }
+
+
+    public override bool didPlayerWin(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerWin();
+        if (jumpCount - PD.roundJumpCount <= 0)
+            return true;
+        return false;
 
     }
 

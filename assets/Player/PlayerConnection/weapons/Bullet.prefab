@@ -248,7 +248,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1505939e6ea1069428d425a76700c2fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletHitEffect: {fileID: 0}
+  bulletHitEffect: {fileID: 1000013462590818, guid: ecdd96beb7f93494880c052dfccf9dc1,
+    type: 2}
   owner: {fileID: 0}
   ownerPD: {fileID: 0}
 --- !u!114 &114620369134265592

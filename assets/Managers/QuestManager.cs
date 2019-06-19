@@ -49,8 +49,11 @@ public class QuestManager : MonoBehaviour {
 
         playerCount = players.Count;
 
+        if (allowAND) {
+            return new ANDQuest(players, GM);
+            //return new NOTQuest( new KillQuest(players, GM) );
 
-        //return new FollowQuest(players, GM);
+        }
 
         float rand = (float)new sysRand().NextDouble();
         bool choseANDORQuest = true;
@@ -80,7 +83,7 @@ public class QuestManager : MonoBehaviour {
             foreach (QuestTypes qt in availableTypes) {
                 typesS += "" + qt + ", ";
             }
-            Debug.Log("available types: " + typesS);
+            //Debug.Log("available types: " + typesS);
             //int randIndex = Random.Range(0, availableTypes.Length);
             int randIndex =new sysRand().Next(0,availableTypes.Length);
             QuestTypes currQuestType = availableTypes[randIndex];

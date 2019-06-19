@@ -23,13 +23,15 @@ public class BossQuest:Quest{
         GM = _GM;
 
 
-        GM.MM.createNewMapBaseOnly();
+
         reward = Random.Range(150, 1000);
 
         questMessage = "defeat the boss";
         
 
         updateQuestMessage();
+        if(GM.MM)
+            GM.MM.createNewMapBaseOnly();
 
     }
 

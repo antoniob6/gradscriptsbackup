@@ -28,9 +28,11 @@ GameObject:
   - component: {fileID: 114346369984241842}
   - component: {fileID: 114951735677199032}
   - component: {fileID: 114764965643000588}
+  - component: {fileID: 114220998495793788}
+  - component: {fileID: 114986602221398850}
   m_Layer: 0
   m_Name: SmartEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,6 +137,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &114220998495793788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1751713478320706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7ca7dee03aee6409806d7f871945b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 3
+  timeBtwDamage: 1.5
+  healthBar: {fileID: 0}
+  isDead: 0
 --- !u!114 &114226387041716386
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -147,8 +164,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onDeathEffect: {fileID: 0}
+  onDamageEffect: {fileID: 0}
   maxHealth: 3
   currentHealth: 0
+  destroyWhenDead: 1
 --- !u!114 &114346369984241842
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -162,10 +181,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
   playerBoundingCollider: {fileID: 61924273661175648}
-  speed: 3
-  m_JumpForce: 400
+  speed: 10
   m_MovementSmoothing: 0.05
-  focusTimePeriod: 3
+  focusTimePeriod: 5
+  tickTimePeriod: 0.5
+  dead: 0
+  target: {fileID: 0}
 --- !u!114 &114449255596430780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -221,3 +242,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 1
+--- !u!114 &114986602221398850
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1751713478320706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c31ea527875586a48a5d2d66a0458c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

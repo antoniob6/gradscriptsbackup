@@ -35,6 +35,7 @@ public class PlayerData : NetworkBehaviour
     [SyncVar] public int candyCount = 0;
     [SyncVar] public int jumpCount = 0;
     [Header("round player stats")]
+
     [SyncVar] public int roundKilledEntityCount = 0;
     [SyncVar] public int roundKilledPlayerCount = 0;
     [SyncVar] public int roundDeathCount = 0;
@@ -125,9 +126,10 @@ public class PlayerData : NetworkBehaviour
     public void playerSkipBtn() {
         if (!isLocalPlayer)
             return;
-
+        if(PSB)
+            PSB.gameObject.SetActive(false);
         CmdPlayerSkipBtn(true);
-        PSB.gameObject.SetActive(false);
+
         //  Debug.Log("player ready and Btn disabled");
     }
     [Command]public void CmdPlayerSkipBtn(bool action) {
@@ -135,6 +137,7 @@ public class PlayerData : NetworkBehaviour
     }
 
     public PlayAgainBtn PAB;
+    public RawImage FinalScoresImage;
     public bool playerWantsToPlayAgain = false;
 
 
@@ -144,6 +147,7 @@ public class PlayerData : NetworkBehaviour
 
         CmdPlayerAgainBtn();
         PAB.gameObject.SetActive(false);
+        FinalScoresImage.gameObject.SetActive(false);
         //  Debug.Log("player ready and Btn disabled");
     }
     [Command]
@@ -161,7 +165,7 @@ public class PlayerData : NetworkBehaviour
             if (PRB)
                 PRB.gameObject.SetActive(true);
             if (PSB)
-                PSB.gameObject.SetActive(false);
+                PSB.gameObject.SetActive(true);
         }
 
     }
@@ -184,8 +188,10 @@ public class PlayerData : NetworkBehaviour
         playerIsReady = false;
         playerWantsToPlayAgain = false;
         if (isLocalPlayer) {//activate btn on local player
-            if (PAB)
+            if (PAB) {
                 PAB.gameObject.SetActive(true);
+                FinalScoresImage.gameObject.SetActive(true);
+            }
             if (PRB)
                 PRB.gameObject.SetActive(false);
             if (PSB)
@@ -207,8 +213,10 @@ public class PlayerData : NetworkBehaviour
     }
     [ClientRpc]public void RpcGameHasStarted() {
         if (isLocalPlayer) {//deactivate btn on local player
-            if (PAB)
+            if (PAB) {
                 PAB.gameObject.SetActive(false);
+                FinalScoresImage.gameObject.SetActive(false);
+            }
             if (PRB)
                 PRB.gameObject.SetActive(true);
             if (PSB)
@@ -300,8 +308,8 @@ public class PlayerData : NetworkBehaviour
 
     }
 
-    
-
-
-
+    [ClientRpc]public void RpcRoundSkipped() {
+        playerWantsToSkip = false;
+        PSB.gameObject.SetActive(true);
+    }
 }

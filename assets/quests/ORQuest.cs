@@ -21,7 +21,7 @@ public class ORQuest : Quest
 
         QuestManager.QuestTypes[] usedTypes = new QuestManager.QuestTypes[1];
         usedTypes[0] = _GM.QM.getQuestType(quest1);
-        Debug.Log("quest1 type is: " + usedTypes[0]);
+        //Debug.Log("quest1 type is: " + usedTypes[0]);
 
 
         quest2 = _GM.QM.createRandomQuest(_players, _GM, false, usedTypes);
@@ -54,7 +54,7 @@ public class ORQuest : Quest
 
 
         if (quest1.isComplete || quest2.isComplete) {
-            Debug.Log("one OR quests completed");
+            //Debug.Log("one OR quests completed");
 
             winners = quest1.winners;
 
@@ -65,7 +65,7 @@ public class ORQuest : Quest
     }
 
     public override void updateQuestMessage() {//make sure the quest discreption is up to date
-        questMessage = quest1.questMessage + " OR " + quest2.questMessage;
+        questMessage = quest1.getMessage() + " OR " + quest2.getMessage();
 
         base.updateQuestMessage();
     }

@@ -99,14 +99,14 @@ public class PlayerReceiveDamage : NetworkBehaviour {
 
 
 	public void TakeDamage(int amount) {
-        if (!isServer)//only server deals damage
+        AudioManager.instance.play("playerGotDamaged");
+        if (!isServer)//only server deals actual damage
             return;
 
         currentHealth -= amount;//reduce the amount of health
 
         if (recieveDamageEffect) {//add an effect that damage was received
             GameObject GO = Instantiate(recieveDamageEffect, PCO.PC.transform.position, Quaternion.identity);
-            
             NetworkServer.Spawn(GO);
         } else {
             Debug.Log("effect recieve damage  not assigned");

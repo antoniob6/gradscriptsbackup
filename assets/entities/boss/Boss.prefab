@@ -502,9 +502,8 @@ MonoBehaviour:
   animator: {fileID: 95823691973390762}
   playerBoundingCollider: {fileID: 58637515181998670}
   speed: 10
-  m_JumpForce: 800
   m_MovementSmoothing: 0.05
-  focusTimePeriod: 3
+  focusTimePeriod: 5
   dead: 0
 --- !u!114 &114606778951010008
 MonoBehaviour:

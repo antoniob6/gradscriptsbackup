@@ -3,7 +3,7 @@
  * the location is randomly chosen based on the parameters
  */ 
 
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -41,10 +41,15 @@ public class SpawnEnemies : NetworkBehaviour {
     void SpawnEnemy() {
         if (!isActiveAndEnabled)
             CancelInvoke();
-        Random.InitState( System.DateTime.Now.Millisecond);
+
+
+        //Random.InitState( System.DateTime.Now.Millisecond);
         MapManager MM = FindObjectOfType<MapManager>();
         if (!MM) {
             Debug.Log(" alien spawner cant find MapManger");
+            return;
+        }
+        if (!MM.finishedCreatingPlatforms) {
             return;
         }
         //spawnrange = MM.getRandomPosition().x;

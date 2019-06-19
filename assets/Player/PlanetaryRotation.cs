@@ -22,14 +22,16 @@ public class PlanetaryRotation : MonoBehaviour {
         if (!gs) {
             return;
         }
-        if (GravitySystem.instance.gravityType==GravitySystem.GravityType.ToCenter)
+        if (GravitySystem.instance.gravityType==GravitySystem.GravityType.ToCenter ||
+            GravitySystem.instance.gravityType == GravitySystem.GravityType.ToOut)
         {
             Vector3 gravityUp = transform.position - gs.transform.position ;
             Quaternion targetRotatoion = Quaternion.FromToRotation(transform.up, gravityUp) * transform.rotation;
             //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotatoion, 50 * Time.deltaTime);
             transform.rotation = targetRotatoion;
         }
-        else if(GravitySystem.instance.gravityType == GravitySystem.GravityType.Down) {
+        else if(GravitySystem.instance.gravityType == GravitySystem.GravityType.Down ||
+            GravitySystem.instance.gravityType == GravitySystem.GravityType.Up) {
             if(transform.rotation!= Quaternion.identity)
             transform.rotation = Quaternion.identity;
         }

@@ -67,7 +67,7 @@ public class EnemyRecieveDamage : NetworkBehaviour {
             FCP.dead = true;
     }
     public void takeDamageWithPD(int amount, PlayerData PDWhoHit) {
-        Debug.Log("enemy got damaged on the server");
+        //Debug.Log("enemy got damaged on the server");
         currentHealth -= amount;
         onDamage();
         if (currentHealth <= 0) {
@@ -94,6 +94,8 @@ public class EnemyRecieveDamage : NetworkBehaviour {
         if (onDamageEffect) {
              Instantiate(onDamageEffect, transform.position, transform.rotation);
         }
+
+        AudioManager.instance.play("enemyDamage");
     }
 
 
@@ -101,5 +103,6 @@ public class EnemyRecieveDamage : NetworkBehaviour {
         if (onDeathEffect) {
             Instantiate(onDeathEffect, transform.position,transform.rotation);
         }
+        //AudioManager.instance.play("enemyDestroy");
     }
 }

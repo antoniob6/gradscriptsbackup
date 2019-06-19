@@ -35,6 +35,28 @@ public class SurviveQuest : Quest {
 
         GM.startSpawingEnemies();
     }
+    public override void tick() {
+        if (isComplete)
+            return;
+        base.tick();
+        bool allDied = true;
+        foreach (GameObject p in players) {
+            if (!p) {
+                continue;
+            }
+            PlayerConnectionObject pco = p.GetComponent<PlayerConnectionObject>();
+            if (!pco) {
+                continue;
+            }
+            PlayerData pd = p.GetComponent<PlayerData>();
+
+            if (pd.roundDeathCount <= 0) {
+                allDied = false;
+            }
+        }
+        if (allDied)
+            questCompleted();
+    }
 
 
 

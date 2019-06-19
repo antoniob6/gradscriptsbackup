@@ -15,7 +15,7 @@ public class GuardQuest : Quest
     private float spawnrange;
     private GameObject foundable;
     private float spawnEvery=1;
-
+    public List<GameObject> enemies = new List<GameObject>();
     public GuardQuest(List<GameObject> _players, GameManager _GM) : base() {
         players = _players;
         GM = _GM;
@@ -28,10 +28,12 @@ public class GuardQuest : Quest
         //Debug.Log("timeLeft: " + timeLeft);
 
         questMessage = "guard the ship";
-        spawnPosition = GM.MM.getRandomPositionAboveMap();
-        foundable = GM.networkSpawn("shipPrefab", spawnPosition);
 
         updateQuestMessage();
+        if(GM.MM)
+            spawnPosition = GM.MM.getRandomPositionAboveMap();
+        foundable = GM.networkSpawn("shipPrefab", spawnPosition);
+
 
     }
     public override void init() {
@@ -68,7 +70,8 @@ public class GuardQuest : Quest
         updir = updir + crossingVector+ foundable.transform.position;
 
         //Debug.Log("spawning shipkiller: " + updir);
-        GM.networkSpawn("shipKillerPrefab", updir);
+        GameObject GO= GM.networkSpawn("shipKillerPrefab", updir);
+        enemies.Add(GO);
 
     }
 
@@ -82,6 +85,10 @@ public class GuardQuest : Quest
     }
     public override void DestroyQuest() {
         GM.networkDestroy(foundable);
+        foreach(GameObject enemy in enemies) {
+            if(enemy)
+                GM.networkDestroy(enemy);
+        }
     }
 
 

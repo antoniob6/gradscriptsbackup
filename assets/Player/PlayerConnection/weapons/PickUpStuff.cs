@@ -1,17 +1,25 @@
-﻿using System.Collections;
+﻿/* this class was originally intended to give the players a mechanism to interact with each other
+ * such as grabing, throwing, pushing, and pulling
+ * but due to the game being multiplayer, and Unity forcing strict rules(server and client restrictions)
+ * it was too complex to implement.
+ * and so it was simplified to give the player the ability to teleport, with a cool down time.
+ */
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class PickUpStuff : MonoBehaviour
 {
-
-
-    public float force = 5;
+    public RawImage coolDownRefernce;
+    public float coolDownTime = 5f;
+    //public float force = 5;
 
 
     private PlayerConnectionObject PCO;
-    private bool active;
+    private bool active;//active means only local player controls it
 
     private GameObject selecteObject;
     private void Start() {
@@ -21,9 +29,25 @@ public class PickUpStuff : MonoBehaviour
            // print("pick up stuff script active");
         }
     }
+    private float lastTpTime = 0f;
 
+    bool teleportActivated = false;
     private void Update() {
-        if (active && Input.GetMouseButtonDown(0)) {
+        if (!active)
+            return;
+        bool canTeleport = Time.time-lastTpTime>=coolDownTime;
+
+        if(!teleportActivated && canTeleport) {//deactivate the visual effects(red color)
+            teleportActivated = true;
+            if (coolDownRefernce)
+                coolDownRefernce.gameObject.SetActive(false);
+
+            AudioManager.instance.play("teleportActive");
+        }
+
+        if (canTeleport && Input.GetMouseButtonDown(0)) {
+
+
             RaycastHit hit;
             Ray ray = PCO.getPlayerCamera().ScreenPointToRay(Input.mousePosition);
             //Debug.Log("trying to identify");
@@ -38,15 +62,31 @@ public class PickUpStuff : MonoBehaviour
                     clickOnSomething = true;
                 }
             }
+            if (clickOnSomething) {//cant teleport because clicked on something
+                AudioManager.instance.play("teleportBlocked");
+            }
 
             if (!clickOnSomething) {//we clicked on empty space you can teleport
-                    Vector3 mousePosition =
-                            PCO.getPlayerCamera().ScreenToWorldPoint(Input.mousePosition);
-                    PCO.PC.transform.position = new Vector3(mousePosition.x, mousePosition.y);
-                
+                teleportActivated = false;
+                lastTpTime = Time.time;
+                if (coolDownRefernce)
+                    coolDownRefernce.gameObject.SetActive(true); //activate cool down visuals
+                AudioManager.instance.play("teleporting");
+
+                Invoke("teleport", 0.3f);
 
             }
         } 
+    }
+
+    private void teleport() {
+        SpawnManager.instance.spawnObjOnLocalInstance("dustPuff", PCO.PC.transform.position);
+        Vector3 mousePosition =
+        PCO.getPlayerCamera().ScreenToWorldPoint(Input.mousePosition);
+        PCO.PC.transform.position = new Vector3(mousePosition.x, mousePosition.y);
+
+
+
     }
 
     /*

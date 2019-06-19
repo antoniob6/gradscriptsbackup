@@ -56,11 +56,30 @@ public class KillQuest : Quest {
             killedCount += p.GetComponent<PlayerData>().roundKilledEntityCount;
             if (killedCount >= KillLimit) {
                 winners.Add(p);
-                p.GetComponent<PlayerData>().RpcUpdateText("you completed the quest, waiting for others to finish");
+                //p.GetComponent<PlayerData>().RpcUpdateText("you completed the quest, waiting for others to finish");
             }
 
         }
     }
+
+    public override string getMessage(PlayerData PD = null) {
+        if (PD == null)
+            return base.getMessage();
+        if(KillLimit - PD.roundKilledEntityCount - PD.roundKilledPlayerCount>0)
+            return questMessage = "kill " + (KillLimit- PD.roundKilledEntityCount- PD.roundKilledPlayerCount) + " things";
+        return questMessage = "kill " + 0 + " things";
+    }
+    public override bool didPlayerWin(PlayerData PD=null) {
+        if (PD == null)
+            return base.didPlayerWin();
+        if (KillLimit - PD.roundKilledEntityCount - PD.roundKilledPlayerCount <= 0)
+            return true;
+        return false;
+
+    }
+
+
+
     public override void DestroyQuest() {
   
 

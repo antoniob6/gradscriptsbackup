@@ -86,6 +86,14 @@ public class CharacterController2DwithGravity : NetworkBehaviour
 
 	public void Move(float movePercentage, bool crouch, bool jump)
 	{
+        //Debug.Log("added force to move the player0");
+        if (GravitySystem.instance.isReverseGravity) {
+            movePercentage *= -1;
+        }
+        if(m_Grounded  && Mathf.Abs(movePercentage) > 0.2) {
+            AudioManager.instance.play("playerRun");
+        }
+
 		// If crouching, check to see if the character can stand up
 		if (!crouch)
 		{
@@ -95,9 +103,9 @@ public class CharacterController2DwithGravity : NetworkBehaviour
 				crouch = true;
 			}
 		}
-
-		//only control the player if grounded or airControl is turned on
-		if (m_Grounded || m_AirControl)
+        //Debug.Log("added force to move the player1");
+        //only control the player if grounded or airControl is turned on
+        if (m_Grounded || m_AirControl)
 		{
 
 			// If crouching
@@ -128,18 +136,19 @@ public class CharacterController2DwithGravity : NetworkBehaviour
 				}
 			}
 
+            //Debug.Log("added force to move the player1.1");
+            //  Vector3 gravityUp = (transform.position - center.position).normalized * gravity;
 
-          //  Vector3 gravityUp = (transform.position - center.position).normalized * gravity;
-            
-          //  Quaternion targetRotatoion = Quaternion.FromToRotation(transform.up, gravityUp) * transform.rotation;
-          //  transform.rotation = Quaternion.Slerp(transform.rotation, targetRotatoion, 50 * Time.deltaTime);
+            //  Quaternion targetRotatoion = Quaternion.FromToRotation(transform.up, gravityUp) * transform.rotation;
+            //  transform.rotation = Quaternion.Slerp(transform.rotation, targetRotatoion, 50 * Time.deltaTime);
             // Move the character by finding the target velocity
             //Vector3 targetVelocity = (transform.right.normalized * movePercentage * 10f) +Vector3.Project(m_Rigidbody2D.velocity,transform.up);
             //new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
             // targetVelocity = Quaternion.Euler(0, 0, transform.rotation.z/Mathf.PI*360) * targetVelocity;
             //Debug.Log(transform.rotation.z / Mathf.PI * 360);
+            //Debug.Log("added force to move the player2");
             float horizontalSpeed=Vector3.Dot(m_Rigidbody2D.velocity, transform.right);
-            
+           //Debug.Log("added force to move the player3");
             //Debug.Log("right:" +transform.right+"vel: "+ m_Rigidbody2D.velocity+"dor: " + horizontalSpeed);
             // m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
             // Debug.Log(horizontalSpeed);
@@ -172,7 +181,7 @@ public class CharacterController2DwithGravity : NetworkBehaviour
                 m_Rigidbody2D.AddForce(transform.right.normalized * horizontalSpeed *-1f);
             }
 
-
+            //Debug.Log("added force to move the player4");
 
             // If the input is moving the player right and the player is facing left...
             if (movePercentage > 0 && !m_FacingRight)
@@ -184,6 +193,15 @@ public class CharacterController2DwithGravity : NetworkBehaviour
 		// If the player should jump...
 		if (m_Grounded && jump)
 		{
+            // Add a vertical force to the player.
+            m_Grounded = false;
+            float gravitySqrt = Mathf.Sqrt(GravitySystem.instance.gravityForce);
+            float jumpHeight = Mathf.Sqrt(GravitySystem.instance.jumpHeight);
+            float jumpForce = m_JumpForce * jumpHeight * gravitySqrt;
+
+            m_Rigidbody2D.AddForce(transform.up.normalized * jumpForce);
+
+            AudioManager.instance.play("playerJump");
             if (PC) {
                 if (PC.PCO) {
                     PlayerData PD = PC.PCO.GetComponent<PlayerData>();
@@ -192,13 +210,7 @@ public class CharacterController2DwithGravity : NetworkBehaviour
                     }
                 }
             }
-			// Add a vertical force to the player.
-			m_Grounded = false;
-            float gravitySqrt = Mathf.Sqrt(GravitySystem.instance.gravityForce);
-            float jumpHeight = Mathf.Sqrt(GravitySystem.instance.jumpHeight);
-            float jumpForce = m_JumpForce * jumpHeight * gravitySqrt;
 
-            m_Rigidbody2D.AddForce(transform.up.normalized* jumpForce);
 		}
 	}
 

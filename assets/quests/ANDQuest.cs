@@ -20,7 +20,7 @@ public class ANDQuest:Quest{
 
         QuestManager.QuestTypes[] usedTypes = new QuestManager.QuestTypes[1];
         usedTypes[0]= _GM.QM.getQuestType(quest1);
-        Debug.Log("quest1 type is: " + usedTypes[0]);
+        //Debug.Log("quest1 type is: " + usedTypes[0]);
 
         quest2= _GM.QM.createRandomQuest(_players, _GM, false,usedTypes);
         if (quest1==null || quest2==null) {
@@ -41,7 +41,7 @@ public class ANDQuest:Quest{
 
     public override void init(){
         base.init();
-        Debug.Log("created and quest");
+        //Debug.Log("created and quest");
         quest1.init();
         quest2.init();
     }
@@ -68,27 +68,31 @@ public class ANDQuest:Quest{
 
         }
     }
-    public override void updateQuestMessage() {//make sure the quest discreption is up to date
-        // call the base function after finishing to update them
 
+
+    public override string getMessage(PlayerData PD = null) {
+        //Debug.Log("updating from inside the and quest");
         if (quest1.isComplete) {
-            if (questMessage != quest2.getMessage()) {
-                questMessage = quest2.getMessage();
-                //Debug.Log("first part completed");
-                //  updateQuestMessage();
-            }
-        } else if (quest2.isComplete) {
-            if (questMessage != quest1.getMessage()) {
-                questMessage = quest1.getMessage();
-                //Debug.Log("second part completed");
-
-                //  updateQuestMessage();
-            }
-        } else {//both quest still not completed
-            questMessage = quest1.questMessage + " AND " + quest2.questMessage;
+            if(quest1.winners.IndexOf(PD.gameObject)>=0)
+                return quest2.getMessage(PD);
+            return STRWAITFAILED;
         }
+        if (quest2.isComplete) {
+            if (quest2.winners.IndexOf(PD.gameObject) >= 0)
+                return quest1.getMessage(PD);
+            return STRWAITFAILED;
+        } 
 
-        base.updateQuestMessage();
+        return questMessage = quest1.getMessage(PD) + " AND " + quest2.getMessage(PD);
+        
+    }
+
+    public override bool didPlayerLose(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerLose();
+        if (quest1.didPlayerLose(PD) || quest2.didPlayerLose(PD))
+            return true;
+        return false;
     }
 
     public override void DestroyQuest() {

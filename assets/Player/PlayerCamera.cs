@@ -22,8 +22,11 @@ public class PlayerCamera : MonoBehaviour {
         if (TargetObject) { 
             transform.position = TargetObject.transform.position;
             transform.position += Vector3.back;
-
             transform.rotation = TargetObject.transform.rotation;
+            if (GravitySystem.instance.isReverseGravity) {
+                transform.Rotate(0, 0, 180);
+            }
+            
         }
         if (parentPCO.isLocal()) {//local player can change weapon
             if (Input.GetAxis("Mouse ScrollWheel") < 0.0f) {

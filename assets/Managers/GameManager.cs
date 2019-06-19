@@ -116,20 +116,42 @@ public class GameManager : NetworkBehaviour {
     private bool playersReady = false;
     private bool roundMessageDisplayed = false;
 
-
+    int playerCount = 0;
+    string[] playerNames;
+    GameObject[] oldPlayers;
     void Update() {
-        if (!starting)
+        if (!starting || !isServer)
             return;
 
-        GameObject[] pl = GameObject.FindGameObjectsWithTag("Player");
-        players.Clear();
-        foreach (GameObject p in pl) {
-            players.Add(p);
+        GameObject[] curplayers = GameObject.FindGameObjectsWithTag("Player");
+        if (playerCount > curplayers.Length) {//a player disconnected
+            for(int i=0;i<players.Count;i++) {
+                if (Array.IndexOf(curplayers, players[i])<=0) {
+                    TextManager.instance.displayMessageToAll("player: " + playerNames[i] + " has dissconnected");
+                }
+            }
+        }
+        if (playerCount != curplayers.Length) {
+            players.Clear();
+            playerCount = curplayers.Length;
+            playerNames = new string[curplayers.Length];
+            //oldPlayers = new GameObject[curplayers.Length];
+            for (int i = 0; i < curplayers.Length; i++) {
+                if (!curplayers[i])
+                    continue;
+                players.Add(curplayers[i]);
+                // oldPlayers[i] = curplayers[i];
+                PlayerData PD = curplayers[i].GetComponent<PlayerData>();
+                if (PD) {
+                    playerNames[i] = PD.playerName;
+                }
+
+            }
         }
         if (playersReady) {
             tickQuests();
 
-            checkForSkip();
+
 
             if (!roundMessageDisplayed) {
                 setDifficulty();
@@ -210,15 +232,18 @@ public class GameManager : NetworkBehaviour {
         }
 
         TextManager.instance.displayMessageToAll("round ending");
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(0);
         currentRound++;
         //changeMap();
         activeQuests.Clear();
+        
     }
 
     public void ForceQuestsToComplete() {
-        foreach (Quest q in activeQuests)
-            q.questCompleted();
+        foreach (Quest q in activeQuests) {
+            q.DestroyQuest();
+            //q.questCompleted();use this to keep results from skipped quests
+        }
     }
 
     bool hasGameover = false;
@@ -228,7 +253,8 @@ public class GameManager : NetworkBehaviour {
         if (currentRound < wantedRounds) {
             if (activeQuests.Count == 0) {
                 startNewRound();
-
+            } else {
+                checkForSkip();
             }
         } else {//reached wanted amount of rounds
             if (!hasGameover) {//do the game over routine
@@ -243,8 +269,12 @@ public class GameManager : NetworkBehaviour {
 
     }
     public void startNewRound() {
+        foreach (GameObject p in players) {
+            if (p)
+                p.GetComponent<PlayerData>().resetRoundStats();
+        }
         Quest l = QM.createRandomQuest(players, this);
-        Debug.Log("created new quest " + l.questMessage);
+        //Debug.Log("created new quest " + l.questMessage);
         if (l != null) {
             activeQuests.Add(l);
             TextManager.instance.displayMessageToAll("Waiting for players to get ready", 100);
@@ -282,7 +312,7 @@ public class GameManager : NetworkBehaviour {
         clearDifficullty();
 
         int numOfEnemies = currentRound * 20 + (int)currentRules.length / 100;
-        Debug.Log("spawnning " + numOfEnemies + " enemies");
+       // Debug.Log("spawnning " + numOfEnemies + " enemies");
         for(int i = 0; i < numOfEnemies; i++) {
             Vector3 randomLocation = MM.getRandomPositionAboveMap();
 
@@ -422,6 +452,7 @@ public class GameManager : NetworkBehaviour {
         if ((float)readyCount / players.Count >= 0.4f) {
             //about  half the players ready so start the game
            // Debug.Log("starting new game");
+
             startNewGame();
 
 
@@ -435,16 +466,21 @@ public class GameManager : NetworkBehaviour {
         int skipCount = 0;
         foreach (GameObject p in players) {
             PlayerData PD = p.GetComponent<PlayerData>();
-            if (PD.playerWantsToPlayAgain)
+            if (PD.playerWantsToSkip)
                 skipCount++;
         }
 
         if ((float)skipCount / players.Count >= 0.4f) {
             //about  half the players ready so skip the game
-            Debug.Log("skipping round");
+            //Debug.Log("skipping round");
+
+            foreach (GameObject p in players) {
+                PlayerData PD = p.GetComponent<PlayerData>();
+                PD.RpcRoundSkipped();
+            }
             ForceQuestsToComplete();
-
-
+            questCompleted(null);
+            currentRound--;
             // TextManager.instance.displayMessageToAll("starting now");
         }
 

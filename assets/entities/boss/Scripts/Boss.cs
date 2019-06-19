@@ -24,19 +24,21 @@ public class Boss : NetworkBehaviour {
     {
 
         if (RD.currentHealth <= 25) {
-            anim.SetTrigger("stageTwo");
+            if(anim)
+                anim.SetTrigger("stageTwo");
         }
 
         if (RD.currentHealth <= 0) {
-            anim.SetTrigger("death");
+            if(anim)
+                anim.SetTrigger("death");
         }
 
         // give the player some time to recover before taking more damage !
         if (timeBtwLeft > 0) {
             timeBtwLeft -= Time.deltaTime;
         }
-
-        healthBar.value = RD.currentHealth;
+        if(healthBar)
+            healthBar.value = RD.currentHealth;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

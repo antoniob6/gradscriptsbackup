@@ -113,6 +113,7 @@ public class PlayerConnectionObject : NetworkBehaviour
           //  Debug.Log("updated camera on local player");
             playerCamera.TargetObject = newTarget;
 
+
         } else {//instances that are on the other clients
 
         }

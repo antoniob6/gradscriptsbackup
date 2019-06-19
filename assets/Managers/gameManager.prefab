@@ -111,4 +111,6 @@ MonoBehaviour:
   spawnPoints: []
   mapGenerated: 0
   waited: 0
+  changeMapb: 0
+  changeQuest: 0
   enemies: []
