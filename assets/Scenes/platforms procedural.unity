@@ -263,7 +263,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91c44bbde8c274e408d44e15cfe3a476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnables: []
+  spawnables:
+  - name: dustPuff
+    obj: {fileID: 1113344616547960, guid: ca91f9a8283f57042830bdc02fa84302, type: 2}
 --- !u!4 &154841820
 Transform:
   m_ObjectHideFlags: 0

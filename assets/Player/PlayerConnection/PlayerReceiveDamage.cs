@@ -20,7 +20,7 @@ public class PlayerReceiveDamage : NetworkBehaviour {
 	[SyncVar]public int currentHealth;
 
     public float maxRecoveryTime=0.5f;
-
+    public float deathCoolDownTime = 5f;
     [SerializeField]
 	private bool destroyOnDeath;
 
@@ -93,9 +93,9 @@ public class PlayerReceiveDamage : NetworkBehaviour {
         }
 
     }
-    
 
-   public bool didWeCheckDeath = false;
+    private float lastCheckTime = 0f;
+    public bool didWeCheckDeath = false;
 
 
 	public void TakeDamage(int amount) {
@@ -118,8 +118,10 @@ public class PlayerReceiveDamage : NetworkBehaviour {
             Debug.Log("PD not assigned");
 
         if (currentHealth <= 0) {//player died
-            if(!didWeCheckDeath){// we only die once
+            if(!didWeCheckDeath || Time.time - lastCheckTime >= deathCoolDownTime){// we only die once
+                // second part of the || is a fail safe incase death wasn't registerd (e.g. packet loss)
                 didWeCheckDeath = true;
+                lastCheckTime = Time.time;
 
                 if (PD) {
                     PD.playerDied();

@@ -37,7 +37,7 @@ public class Rules  {
     public void randomizeRules() {
 
         Radius = Random.Range(20f, 90f);
-        isCircle = Random.Range(0, 2)==1?false:false;
+        isCircle = Random.Range(0, 2)==1?true:false;
         if(isCircle)
             length = Random.Range(400f,1500f);
         else

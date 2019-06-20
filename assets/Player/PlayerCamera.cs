@@ -22,8 +22,11 @@ public class PlayerCamera : MonoBehaviour {
         if (TargetObject) { 
             transform.position = TargetObject.transform.position;
             transform.position += Vector3.back;
-            transform.rotation = TargetObject.transform.rotation;
-            if (GravitySystem.instance.isReverseGravity) {
+            transform.rotation = Quaternion.identity;
+            transform.Rotate(0, 0, TargetObject.transform.rotation.eulerAngles.z);
+
+            if (GravitySystem.instance.gravityType != GravitySystem.GravityType.ToCenter &&
+                GravitySystem.instance.isReverseGravity) {
                 transform.Rotate(0, 0, 180);
             }
             

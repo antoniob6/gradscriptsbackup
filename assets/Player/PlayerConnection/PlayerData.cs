@@ -47,6 +47,10 @@ public class PlayerData : NetworkBehaviour
     private void Start() {
         PCO = GetComponent<PlayerConnectionObject>();
         PRD = GetComponent<PlayerReceiveDamage>();
+
+        if (isServer && playerName != "default") { 
+            playerName = "player " + new System.Random().Next(1,100) ;
+        }
     }
 
     #region healthUpdate

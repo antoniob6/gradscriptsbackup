@@ -30,7 +30,7 @@ public class CollectQuest : Quest
         collectLimit = Random.Range(3, 20);
         reward = collectLimit * 20;
 
-        questMessage = "help in collecting " + collectLimit + " pieces of red candy";
+        questMessage = "take part of collecting " + collectLimit + " pieces of red candy";
         updateQuestMessage();
     }
 
@@ -38,12 +38,12 @@ public class CollectQuest : Quest
     
     public override void init() {
         base.init();
-
+        //Debug.Log("initializing collect quest");
         for (int i = 0; i < collectLimit * 2; i++) {
             //spawnPosition = new Vector2(players[0].transform.position.x+Random.Range(-spawnrange, spawnrange), players[0].transform.position.y + 10);
             spawnPosition = GM.MM.getRandomPositionAboveMap();
 
-            Debug.Log("spawnning candy");
+            //Debug.Log("spawnning candy");
             candies.Add(GM.networkSpawn("candyPrefab", spawnPosition));
 
         }
@@ -65,7 +65,7 @@ public class CollectQuest : Quest
             foreach (GameObject c in candies) {
 
                 if (Vector3.Distance(c.transform.position, PC.transform.position) < threshold) {
-                    Debug.Log("player has found a piece of candy");
+                    //Debug.Log("player has found a piece of candy");
                     if (finders.IndexOf(p) < 0)
                         finders.Add(p);
                     candiesToRemove.Add(c);
@@ -78,7 +78,7 @@ public class CollectQuest : Quest
                         questCompleted();
                     }
 
-                    questMessage = "everyone search for " + collectLimit + " pieces of red candy";
+                    questMessage = "take part of collecting " + collectLimit + " pieces of red candy";
                     updateQuestMessage();
 
                 }

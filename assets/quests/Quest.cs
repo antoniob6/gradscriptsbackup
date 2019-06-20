@@ -109,12 +109,13 @@ public class Quest{
         foreach (GameObject p in players) {
             if (!p)
                 return;
-            bool playerWon = false;
-            foreach (GameObject w in winners) {
-                if (w == p)
-                    playerWon = true;  
-            }
-            if (playerWon)
+            //bool playerWon = false;
+            //foreach (GameObject w in winners) {
+            //    if (w == p)
+            //        playerWon = true;  
+            //}
+            PlayerData pd = p.GetComponent<PlayerData>();
+            if (pd != null && didPlayerWin(pd)) 
                 TextManager.instance.RpcDisplayGreenMessageToPlayer(p, "you won");
             //p.GetComponent<PlayerData>().RpcUpdateText("you have won this round");
             else
@@ -135,6 +136,12 @@ public class Quest{
     }
     public virtual bool didPlayerLose(PlayerData PD = null) {
         return false;
+    }
+
+    public bool didPlayerFinish(PlayerData PD = null) {
+        if (!didPlayerWin(PD) && !didPlayerLose(PD))
+            return false;
+        return true;
     }
 
     public void setTimeLimit() {//set high propability for medium time ...

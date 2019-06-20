@@ -100,7 +100,11 @@ public class GameManager : NetworkBehaviour {
 
     void changeMap() {
         randomRules();
-        MM.createNewMap();
+       
+        if((new System.Random()).NextDouble() <= 0.1)
+            MM.createNewMapPlatformsOnly();
+        else
+            MM.createNewMap();
     }
 
     void startGame() {
@@ -122,14 +126,28 @@ public class GameManager : NetworkBehaviour {
     void Update() {
         if (!starting || !isServer)
             return;
+      
 
         GameObject[] curplayers = GameObject.FindGameObjectsWithTag("Player");
+
+        //if (curplayers.Length< LobbyData.instance.numOfConnectedPlayer * 0.8) {
+        //    TextManager.instance.RpcDebugOnAll("<0.8 ready: " + curplayers.Length + " of " +
+        //        LobbyData.instance.numOfConnectedPlayer);
+
+        //    return;
+        //}
+
         if (playerCount > curplayers.Length) {//a player disconnected
-            for(int i=0;i<players.Count;i++) {
-                if (Array.IndexOf(curplayers, players[i])<=0) {
-                    TextManager.instance.displayMessageToAll("player: " + playerNames[i] + " has dissconnected");
-                }
+            TextManager.instance.displayMessageToAll("player has disconnected",5);
+            Debug.Log("player disconnected");
+        }
+        if (playerCount < curplayers.Length) {//a player connected
+            MM.syncAllMaps();
+            foreach (Quest q in activeQuests) {
+                q.updateQuestMessage();
             }
+            TextManager.instance.RpcDebugOnAll("player increased: " + curplayers.Length);
+
         }
         if (playerCount != curplayers.Length) {
             players.Clear();
@@ -186,6 +204,7 @@ public class GameManager : NetworkBehaviour {
 
     }
 
+
     private void randomRules() {
         currentRules = new Rules();
         GravitySystem.instance.gravityForce = currentRules.gravityForce;
@@ -241,8 +260,11 @@ public class GameManager : NetworkBehaviour {
 
     public void ForceQuestsToComplete() {
         foreach (Quest q in activeQuests) {
-            q.DestroyQuest();
-            //q.questCompleted();use this to keep results from skipped quests
+            if(starting && playersReady)
+                q.questCompleted();//reward the players who completed thier section
+            else
+                q.DestroyQuest();//skip quest that hasn't started
+           
         }
     }
 
@@ -274,7 +296,7 @@ public class GameManager : NetworkBehaviour {
                 p.GetComponent<PlayerData>().resetRoundStats();
         }
         Quest l = QM.createRandomQuest(players, this);
-        //Debug.Log("created new quest " + l.questMessage);
+        Debug.Log("created: " + l.questMessage);
         if (l != null) {
             activeQuests.Add(l);
             TextManager.instance.displayMessageToAll("Waiting for players to get ready", 100);
@@ -410,7 +432,7 @@ public class GameManager : NetworkBehaviour {
     }
     [Server]
     public void stopSpawingEnemies() {
-        enemieSpawner.SetActive(false);
+       // enemieSpawner.SetActive(false);
     }
 
     #region checkPlayerVotes

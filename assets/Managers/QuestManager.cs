@@ -49,8 +49,12 @@ public class QuestManager : MonoBehaviour {
 
         playerCount = players.Count;
 
+
+        //return new FollowQuest(players, GM);
+        //return new BossQuest(players, GM);
         if (allowAND) {
-            return new ANDQuest(players, GM);
+            //return new CompoundQuest(players, GM);
+            //return new ANDQuest(players, GM);
             //return new NOTQuest( new KillQuest(players, GM) );
 
         }
@@ -149,6 +153,14 @@ public class QuestManager : MonoBehaviour {
 
         List<QuestTypes> qts = new List<QuestTypes>();
         qts.AddRange(allAvailableQuestTypes);
+
+        MapManager MM = FindObjectOfType<MapManager>();
+        if (MM&& MM.finishedCreatingPlatforms) {
+            if(MM.isPlatformsOnly)  //remove boss quest because for platform only map
+                if(qts.Contains(QuestTypes.boss))
+                    qts.Remove(QuestTypes.boss);
+        }
+
 
         if (playerCount == 1 && qts.IndexOf(QuestTypes.touch) >= 0) {//remove touch goal if we only have one player
             qts.Remove(QuestTypes.touch);

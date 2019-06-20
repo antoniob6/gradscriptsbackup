@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1880929529975064}
+  m_IsPrefabAsset: 1
+--- !u!1 &1880929529975064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4868213623013472}
+  - component: {fileID: 114987007998429106}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4868213623013472
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1880929529975064}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.9822652, y: 3.2730737, z: -0.32793063}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114987007998429106
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1880929529975064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe3c7fc8799d5314090b783be82176c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: throw
+    clip: {fileID: 8300000, guid: 3b22d074ce52fbe4fbdf5fb62973ab94, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: teleportActive
+    clip: {fileID: 8300000, guid: 95c315eb396f33944a5fd98164d969a1, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: teleporting
+    clip: {fileID: 8300000, guid: cb321e0e67455dd4b8293e3233354bf3, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: teleportBlocked
+    clip: {fileID: 8300000, guid: 52659b3c95dc6427c9feef7fd4624f81, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: theme
+    clip: {fileID: 8300000, guid: 3a9ba69f03694d44a9968f5b7c4abb1c, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 1
+  - name: slashing
+    clip: {fileID: 8300000, guid: 6b428d6a2a5cddd4cb167561aca4ffe7, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: enemyDamage
+    clip: {fileID: 8300000, guid: bb1f878fc28034454b87b03dca70c85e, type: 3}
+    volume: 0
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: playerDied
+    clip: {fileID: 8300000, guid: 8d331b50969371c4db3319a915ef2cad, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: playerGotDamaged
+    clip: {fileID: 8300000, guid: a5406be214f159a4abfedff134037b3d, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: slashing
+    clip: {fileID: 8300000, guid: 6b428d6a2a5cddd4cb167561aca4ffe7, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: enemyDeath
+    clip: {fileID: 8300000, guid: 707ed9e4e72dc5f4da4f6d6e67e3bb7d, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: stageClear
+    clip: {fileID: 8300000, guid: 5efaa944cc7cece4996b86725256962b, type: 3}
+    volume: 0.4
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0

@@ -26,14 +26,14 @@ public class SurviveQuest : Quest {
         reward = Random.Range(50, 500);
         reward =(int) timeLeft * 5;
         questMessage = "stay alive";
-        GM.startSpawingEnemies();
+        //GM.startSpawingEnemies();
         updateQuestMessage();
 
     }
     public override void init() {
         base.init();
 
-        GM.startSpawingEnemies();
+        //GM.startSpawingEnemies();
     }
     public override void tick() {
         if (isComplete)
@@ -81,8 +81,26 @@ public class SurviveQuest : Quest {
 
         base.questCompleted();
     }
+    public override string getMessage(PlayerData PD = null) {
+        if (PD == null)
+            return base.getMessage();
+        if(didPlayerLose())
+            return STRWAITFAILED;
+
+        return "stay alive";
+    }
+
+
+    public override bool didPlayerLose(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerLose(PD);
+        if (PD.roundDeathCount>0)
+            return true;
+        return false;
+    }
+
     public override void DestroyQuest() {
-        GM.stopSpawingEnemies();
+        //GM.stopSpawingEnemies();
 
     }
 

@@ -64,7 +64,7 @@ public class KillQuest : Quest {
 
     public override string getMessage(PlayerData PD = null) {
         if (PD == null)
-            return base.getMessage();
+            return base.getMessage(PD);
         if(KillLimit - PD.roundKilledEntityCount - PD.roundKilledPlayerCount>0)
             return questMessage = "kill " + (KillLimit- PD.roundKilledEntityCount- PD.roundKilledPlayerCount) + " things";
         return questMessage = "kill " + 0 + " things";

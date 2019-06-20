@@ -57,7 +57,10 @@ public class SpawnEnemies : NetworkBehaviour {
         Vector3 randomSpawnPosition = MM.getRandomPosition();
         Vector2 spawnPosition = new Vector2 (randomSpawnPosition.x, randomSpawnPosition.y+10);
 		GameObject enemy = Instantiate (enemyPrefab, spawnPosition, Quaternion.identity) as GameObject;
-		enemy.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0.0f, -this.enemySpeed);
+
+        //enemy.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0.0f, -this.enemySpeed);
+        enemy.GetComponent<Rigidbody2D>().velocity =
+            GravitySystem.instance.getUpDirection(randomSpawnPosition)*-enemySpeed;
         enemy.layer = 8;
         enemy.transform.parent = transform;
 		NetworkServer.Spawn (enemy);

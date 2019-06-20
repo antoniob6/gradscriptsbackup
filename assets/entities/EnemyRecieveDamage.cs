@@ -60,6 +60,19 @@ public class EnemyRecieveDamage : NetworkBehaviour {
         }
     }
 
+    public void takeDamageOnServer(int amount) {
+        if (!isServer)
+            return;
+        onDamage();
+        currentHealth -= amount;
+        if (currentHealth <= 0) {
+            EntityDied();
+            if (destroyWhenDead) {
+                Destroy(gameObject);
+            }
+        }
+    }
+
 
     private void EntityDied() {
         dead = true;
@@ -88,6 +101,8 @@ public class EnemyRecieveDamage : NetworkBehaviour {
         dead = true;
         if (FCP)//if the entity follows the player
             FCP.dead = true;
+
+        AudioManager.instance.play("enemyDeath");
     }
 
     private void onDamage() {
@@ -103,6 +118,7 @@ public class EnemyRecieveDamage : NetworkBehaviour {
         if (onDeathEffect) {
             Instantiate(onDeathEffect, transform.position,transform.rotation);
         }
+        //AudioManager.instance.play("enemyDeath");
         //AudioManager.instance.play("enemyDestroy");
     }
 }

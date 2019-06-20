@@ -18,6 +18,10 @@ public class RacingQuest:Quest{
         GM = _GM;
         reward = Random.Range(50, 500);
         questMessage ="race to the right edge of the map";
+        if (GM.currentRules!=null) {
+            if (GM.currentRules.isReverseGravity)
+                questMessage = "race to the left edge of the map";
+        }
 
 
         updateQuestMessage();
@@ -29,7 +33,7 @@ public class RacingQuest:Quest{
         GoalLocation = GM.MM.getMapEndPosition();
     }
 
-
+    GameObject firstPlayerObj;
     public override void tick() {
         if (isComplete)
             return;
@@ -52,6 +56,7 @@ public class RacingQuest:Quest{
 
             if (Vector3.Distance(GoalLocation, GO.transform.position) < threshold)
             {
+                firstPlayerObj = p;
                 Debug.Log("some one reached the end");
                 //Debug.Log("player has found the foundable goal");
                 winners.Add(p);
@@ -61,6 +66,24 @@ public class RacingQuest:Quest{
             
         }
     }
+
+    public override bool didPlayerWin(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerWin(PD);
+        if (PD.gameObject == firstPlayerObj)
+            return true;
+        return false;
+    }
+    public override bool didPlayerLose(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerLose(PD);
+        if (firstPlayerObj != null && PD.gameObject != firstPlayerObj)
+            return true;
+        return false;
+    }
+
+
+
     public override void DestroyQuest() {
     }
 

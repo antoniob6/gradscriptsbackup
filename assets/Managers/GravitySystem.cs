@@ -77,10 +77,19 @@ public class GravitySystem :NetworkBehaviour {
             return false;
 
         } else {
-            if(position.sqrMagnitude<= 100 || position.sqrMagnitude>=500000)
+            if (position.sqrMagnitude <= 600 || position.sqrMagnitude >= 500000) {
+                //Debug.Log("returning true");
                 return true;
+            }
+            //Debug.Log("returning false: "+ position.sqrMagnitude);
             return false;
         }
 
+    }
+
+    public bool isCircularMap() {
+        if (gravityType == GravityType.ToCenter || gravityType == GravityType.ToOut)
+            return true;
+        return false;
     }
 }

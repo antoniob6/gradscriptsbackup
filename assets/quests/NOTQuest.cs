@@ -27,12 +27,12 @@ public class NOTQuest:Quest{
 
     }
 
-    //public override void init(){
-    //    base.init();
-    //    //Debug.Log("created NOT quest");
-    //    quest1.init();
+    public override void init(){
+        base.init();
+       //Debug.Log("created NOT quest");
+        quest1.init();
 
-    //}
+    }
     public override void tick() {
         if (isComplete)
             return;
@@ -41,18 +41,17 @@ public class NOTQuest:Quest{
         quest1.tick();
 
         if (quest1.isComplete  ) {
-            //Debug.Log("not quest failed because first one completed");
-
-
-            foreach(GameObject w in quest1.winners) {
-                if (winners.IndexOf(w)>=0) {//found someone who didn't complete
-                    winners.Remove(w);
-                }
-            }
-            //winners.AddRange(quest2.winners);
             questCompleted();
 
         }
+    }
+    public override void questCompleted() {
+        foreach (GameObject w in quest1.winners) {
+            if (winners.IndexOf(w) >= 0) {//found someone who didn't complete
+                winners.Remove(w);
+            }
+        }
+        base.questCompleted();
     }
     public override void updateQuestMessage() {//make sure the quest discreption is up to date
                                                // call the base function after finishing to update them
@@ -73,16 +72,14 @@ public class NOTQuest:Quest{
     public override bool didPlayerWin(PlayerData PD = null) {
         if (PD == null)
             return base.didPlayerWin();
-        if (quest1.didPlayerLose(PD))
-            return true;
-        return false;
+
+        return quest1.didPlayerLose(PD);
     }
     public override bool didPlayerLose(PlayerData PD = null) {
         if (PD == null)
             return base.didPlayerLose();
-        if (quest1.didPlayerWin(PD))
-            return true;
-        return false;
+
+        return quest1.didPlayerWin(PD);
     }
 
     public override void DestroyQuest() {

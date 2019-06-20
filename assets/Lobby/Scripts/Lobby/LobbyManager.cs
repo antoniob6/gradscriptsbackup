@@ -269,6 +269,8 @@ namespace Prototype.NetworkLobby
             addPlayerButton.SetActive(localPlayerCount < maxPlayersPerConnection && _playerNumber < maxPlayers);
         }
 
+
+
         // ----------------- Server callbacks ------------------
 
         //we want to disable the button JOIN if we don't have enough player
@@ -339,15 +341,21 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyServerPlayersReady()
         {
+            int readyCount=0;
 			bool allready = true;
 			for(int i = 0; i < lobbySlots.Length; ++i)
 			{
-				if(lobbySlots[i] != null)
-					allready &= lobbySlots[i].readyToBegin;
+                if (lobbySlots[i] != null) {
+                    allready &= lobbySlots[i].readyToBegin;
+                    if (lobbySlots[i].readyToBegin)
+                        readyCount++;
+                }
 			}
 
-			if(allready)
-				StartCoroutine(ServerCountdownCoroutine());
+            if (allready) {
+                LobbyData.instance.numOfConnectedPlayer = readyCount;
+                StartCoroutine(ServerCountdownCoroutine());
+            }
         }
 
         public IEnumerator ServerCountdownCoroutine()

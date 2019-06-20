@@ -36,7 +36,7 @@ public class LocationQuest:Quest{
         foundable =GM.networkSpawn("locationPrefab",spawnPosition);
         //GM.setTimeLimit(30f);
     }
-
+    GameObject winingPlayer;
     public override void tick() {
         base.tick();
 
@@ -62,12 +62,40 @@ public class LocationQuest:Quest{
             if (Vector3.Distance(foundable.transform.position, GO.transform.position) < threshold)
             {
                 //Debug.Log("player has found the foundable goal");
+                winingPlayer = p;
                 winners.Add(p);
                 questCompleted();
 
             }
             
         }
+    }
+    public override string getMessage(PlayerData PD = null) {
+        if (PD == null)
+            return base.getMessage(PD);
+        if (didPlayerWin())
+            return STRWAITWON;
+        if (didPlayerLose(PD))
+                return STRWAITFAILED;
+
+
+        return "be the first to find the Blue candy";
+    }
+    public override bool didPlayerWin(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerWin();
+        if (winingPlayer != null && winingPlayer == PD.gameObject)
+            return true;
+        return false;
+
+    }
+    public override bool didPlayerLose(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerWin();
+        if (winingPlayer!=null && winingPlayer != PD.gameObject)
+            return true;
+        return false;
+
     }
     public override void DestroyQuest() {
         GM.networkDestroy(foundable);

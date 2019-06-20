@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 public class KillOutOfMapChecker : NetworkBehaviour {
 
-    private float maxRecoveryTime = 1f;
+    private float maxRecoveryTime = 5f;
     // Use this for initialization
     void Start () {
 		
@@ -18,23 +18,24 @@ public class KillOutOfMapChecker : NetworkBehaviour {
 
     private float lastDamageTime = 0f;
     void Update () {
+
         if (Time.time - lastDamageTime <= maxRecoveryTime) {
             // Debug.Log("damage prevented: " + (Time.time - lastDamageTime));
             return;
         }
-        lastDamageTime = Time.time;
+
 
         //Debug.Log("checking on obj");
 
         if (GravitySystem.instance.didObjFallOutside(transform.position)) {
-
+            lastDamageTime = Time.time;
 
 
             PlayableCharacter PC = GetComponent<PlayableCharacter>();
             if (PC) {
                // Debug.Log("player fallen outside of map");
                 PlayerReceiveDamage PRD = PC.PCO.GetComponent<PlayerReceiveDamage>();
-                if (PRD.isLocalPlayer) {
+                if (PRD.isLocalPlayer) {//apply damage to parent PCO object
                     //Debug.Log("giving damage to player that fell out of map");
                     PRD.CmdTakeDamage(1000);
                 }
@@ -43,8 +44,8 @@ public class KillOutOfMapChecker : NetworkBehaviour {
             EnemyRecieveDamage ERD = GetComponent<EnemyRecieveDamage>();
             if (ERD) {
                // Debug.Log("enemy fallen outside of map");
-                if(ERD.hasAuthority|| ERD.isLocalPlayer)
-                    ERD.CmdTakeDamage(1000);
+                if(isServer)
+                    ERD.takeDamageOnServer(1000);
                 return;
             }
 
