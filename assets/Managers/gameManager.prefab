@@ -98,6 +98,8 @@ MonoBehaviour:
   shipPrefab: {fileID: 1699992064975162, guid: d72423abc8998204abd6c76d265ff620, type: 2}
   shipKillerPrefab: {fileID: 1023448067033890, guid: 3f4f4f2d8f17dee4999983db214ac249,
     type: 2}
+  playerKillerPrefab: {fileID: 1023448067033890, guid: 1a2acae5be66da64db0106c3aa0d1b80,
+    type: 2}
   questTimeLimit: 3
   enemieSpawner: {fileID: 0}
   wantedRounds: 4
@@ -113,4 +115,5 @@ MonoBehaviour:
   waited: 0
   changeMapb: 0
   changeQuest: 0
+  devmode: 1
   enemies: []

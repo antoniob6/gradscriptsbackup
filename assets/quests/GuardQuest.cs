@@ -30,14 +30,34 @@ public class GuardQuest : Quest
         questMessage = "guard the ship";
 
         updateQuestMessage();
-        if(GM.MM)
+        if (GM.MM) {
             spawnPosition = GM.MM.getRandomPositionAboveMap();
+            if(new System.Random().NextDouble() <=0.2)
+                GM.MM.createNewMapPlatformsOnly();
+            else
+                GM.MM.createNewMapBaseOnly();
+        }
+
+
         foundable = GM.networkSpawn("shipPrefab", spawnPosition);
 
 
     }
     public override void init() {
         base.init();
+
+        if (!foundable) {
+            if (GM.MM) {
+                spawnPosition = GM.MM.getRandomPositionAboveMap();
+                if (new System.Random().NextDouble() <= 0.2)
+                    GM.MM.createNewMapPlatformsOnly();
+                else
+                    GM.MM.createNewMapBaseOnly();
+            }
+
+
+            foundable = GM.networkSpawn("shipPrefab", spawnPosition);
+        }
         
     }
     private float lastSpawnTime = 0f;
@@ -57,21 +77,21 @@ public class GuardQuest : Quest
                 questCompleted();
         }
 
-        if (Time.time - lastSpawnTime <= spawnEvery) {
-            
-            return;
+        if (Time.time - lastSpawnTime >=4/ spawnEvery) {
+            lastSpawnTime = Time.time;
+
+            Vector3 updir = GravitySystem.instance.getUpDirection(foundable.transform.position);
+            float randRight = 40f * Random.Range(-1f, 1f);
+            Vector3 crossingVector = new Vector3(-updir.y, updir.x) * randRight;
+            updir = updir * 25;
+            updir = updir + crossingVector + foundable.transform.position;
+
+            //Debug.Log("spawning shipkiller: " + updir);
+            GameObject GO = GM.networkSpawn("shipKillerPrefab", updir);
+            enemies.Add(GO);
+
         }
-        lastSpawnTime = Time.time;
-
-        Vector3 updir= GravitySystem.instance.getUpDirection(foundable.transform.position) ;
-        float randRight =100f * Random.Range(-1f, 1f);
-        Vector3 crossingVector = new Vector3(updir.y, updir.x)*randRight;
-        updir = updir * 40;
-        updir = updir + crossingVector+ foundable.transform.position;
-
-        //Debug.Log("spawning shipkiller: " + updir);
-        GameObject GO= GM.networkSpawn("shipKillerPrefab", updir);
-        enemies.Add(GO);
+       
 
     }
 
@@ -82,6 +102,13 @@ public class GuardQuest : Quest
             winners.Clear();
         }
         base.questCompleted();
+    }
+
+    public override bool didPlayerWin(PlayerData PD = null) {
+        if (PD == null)
+            return base.didPlayerWin();
+
+        return winners.Contains(PD.gameObject);
     }
     public override void DestroyQuest() {
         GM.networkDestroy(foundable);

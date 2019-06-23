@@ -63,8 +63,15 @@ public class FollowClosestPlayer : NetworkBehaviour {
 	void Update () {
         if (dead)
             return;
-        if(!target)
-            target= findClosestTarget();
+
+        focusTimeLeft -= Time.deltaTime;
+
+        if (focusTimeLeft <= 0f) {
+            focusTimeLeft = focusTimePeriod;
+            target = findClosestTarget();
+        }
+        if (!target)
+            return;
 
 
         tickTimeLeft -= Time.deltaTime;
@@ -76,12 +83,6 @@ public class FollowClosestPlayer : NetworkBehaviour {
         }
 
 
-        focusTimeLeft -= Time.deltaTime;
-
-        if (focusTimeLeft <= 0f) {
-            focusTimeLeft = focusTimePeriod;
-            target = findClosestTarget();
-        }
     }
 
     void tick() {

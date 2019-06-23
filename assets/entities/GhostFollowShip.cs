@@ -21,15 +21,24 @@ public class GhostFollowShip : MonoBehaviour {
 
     GameObject target;
     // Use this for initialization
+    float lastCheckTime = 0;
+    bool checkedForTarget = false;
     void FixedUpdate() {
         if (dead)
             return;
-        if (!target)
+        if (!target&& Time.time-lastCheckTime>=3f) {
+            lastCheckTime = Time.time;
             target = findShip();
+            if(lastCheckTime>=1f)
+                checkedForTarget = true;
+
+        }
         if (target)
             tick();
 
-
+        if(!target && checkedForTarget) {
+            Destroy(gameObject);
+        }
 
     }
 

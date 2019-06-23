@@ -50,10 +50,12 @@ public class MapManager : NetworkBehaviour {
 
     private bool createdDeathBarrier = false;
     private bool syncedTheMaps = false;
+    float lastSpawnTime = 0f;
     void Update() {
         if (!isServer)
             return;
-        if (!isBusyMakingMap && !finishedCreatingPlatforms) {
+        if (!isBusyMakingMap && !finishedCreatingPlatforms &&Time.time -lastSpawnTime>=0.1f) {
+            lastSpawnTime = Time.time;
             if (!createdDeathBarrier) {
                 createdDeathBarrier = true;
                 createDeathBarier();
@@ -82,7 +84,7 @@ public class MapManager : NetworkBehaviour {
 
         }
 
-        if(!GM.currentRules.isCircle && blackHolePrefab != null) {
+        if(GM.currentRules!=null&&!GM.currentRules.isCircle && blackHolePrefab != null) {
             NetworkServer.Destroy(deathBarrierObj);
             deathBarrierObj = null;
         }
@@ -212,9 +214,19 @@ public class MapManager : NetworkBehaviour {
         //generatedMapBase.RpcSyncVerts(generatedMapBase.mainMesh.vertices);
         if (!isPlatformsOnly) {
             //Debug.Log("syncing only platforms");
+            if (!generatedMapBase) {
+               
+                return;
+            }
             generatedMapBase.RpcSyncSeedOnBase(GM.currentRules.seed, GM.currentRules.length,
                     GM.currentRules.jumpHeight, GM.currentRules.isCircle);
         }
+        StartCoroutine(syncMapCo());
+
+        respawnAllPlayers();
+    }
+
+    IEnumerator syncMapCo() {
         int index = 0;
         foreach (MapGenerator m in platforms) {
             index++;
@@ -226,12 +238,18 @@ public class MapManager : NetworkBehaviour {
                 Debug.Log("main mesh on map is null");
                 continue;
             }
+
             m.RpcSyncVerts(m.mainMesh.vertices);
+           // Debug.Log("syncing platform");
+            yield return new WaitForSeconds(0.1f);
         }
-        respawnAllPlayers();
+
     }
-    //basicly distort the space, apply the distortion to the verticies 
-    public void circlizeAllMaps() {
+
+
+
+        //basicly distort the space, apply the distortion to the verticies 
+        public void circlizeAllMaps() {
         surfacesInGlobalSpace.Clear();
         //Debug.Log("cirulizing the maps");
         float radius = generatedMapBase.length / Mathf.PI / 2;

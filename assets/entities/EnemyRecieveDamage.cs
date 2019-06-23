@@ -25,9 +25,13 @@ public class EnemyRecieveDamage : NetworkBehaviour {
 	}
     
     void OnTriggerEnter2D(Collider2D collider) {
+
         if (collider.tag == "Bullet") {
             TakeDamage(1,collider);
-            Destroy(collider.gameObject);
+            //Destroy(collider.gameObject);
+            if (isServer) {
+                NetworkServer.Destroy(collider.gameObject);
+            }
         }
     }
     void TakeDamage(int amount, Collider2D collider) {

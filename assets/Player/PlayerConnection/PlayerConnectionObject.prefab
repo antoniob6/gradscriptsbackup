@@ -996,7 +996,7 @@ Transform:
   m_Children:
   - {fileID: 224805960769972178}
   m_Father: {fileID: 4808846827771298}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4593998818799192
 Transform:
@@ -1050,8 +1050,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4959609753515914}
-  - {fileID: 4592136018555888}
   - {fileID: 4960740114034556}
+  - {fileID: 4592136018555888}
   - {fileID: 4593998818799192}
   m_Father: {fileID: 4871723106598424}
   m_RootOrder: 1
@@ -1106,7 +1106,7 @@ Transform:
   - {fileID: 4144421257168546}
   - {fileID: 224320020387719706}
   m_Father: {fileID: 4808846827771298}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &20018960572165330
 Camera:
@@ -1252,7 +1252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swordLength: 2
-  swordDamage: 2
+  swordDamage: 3
   knockBackForce: 200
   sword: {fileID: 1444240633136936}
   slashingEffect: {fileID: 1113344616547960, guid: ca91f9a8283f57042830bdc02fa84302,
@@ -1346,8 +1346,9 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "controls\n\tMovement: a,d,space\n\tinteraction: mouseClick\n\tchanging
-    weapon: q\nInstructions\n\tgame is divided into rounds\n\tround will start when
-    40% are ready\n\teach session lasts 4 rounds"
+    weapon: q,e\n\nInstructions\n\tgame is divided into rounds\n\teach round will
+    start when 40% are ready\n\teach session lasts 5 rounds\n\n\n\thost debug commands
+    g change map h change goal"
 --- !u!114 &114145956681788128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1654,7 +1655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e48a6b469b5186f458b4f2d263e9198a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coolDownTime: 0.3
+  coolDownTime: 0.1
 --- !u!114 &114310493885680462
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3901,7 +3902,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 223, y: -11}
-  m_SizeDelta: {x: 499, y: 159.8}
+  m_SizeDelta: {x: 480, y: 159.8}
   m_Pivot: {x: 1, y: 1}
 --- !u!224 &224136682586198014
 RectTransform:

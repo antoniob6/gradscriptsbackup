@@ -868,6 +868,10 @@ MonoBehaviour:
   boxPrefab: {fileID: 1240778887811140, guid: 5abfd08247c12134da0f8aca38257078, type: 2}
   mapGeneratorPrefabs:
   - {fileID: 114216134669453306, guid: 09fc95f266fc58b439958c0bc5bd9c05, type: 2}
+  - {fileID: 114216134669453306, guid: fcc8d5f1ccbc5d84da2caf3c9a3af74c, type: 2}
+  - {fileID: 114216134669453306, guid: 8ae7eef66b161e343b9be04cb462fab9, type: 2}
+  - {fileID: 114216134669453306, guid: e6bd973d3d5d2ac4bbb61b45484aa2d6, type: 2}
+  - {fileID: 114216134669453306, guid: 37502ad9d4528b04ab717d013488619c, type: 2}
   isBusyMakingMap: 1
   finishedCreatingPlatforms: 0
 --- !u!4 &1557152682

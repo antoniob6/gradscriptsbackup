@@ -35,9 +35,8 @@ public class TextManager : NetworkBehaviour {
             textObject.transform.LookAt(GravitySystem.instance.getUpDirection(textObject.transform.position));
         textObject.GetComponent<XPTextMessage>().updateTextOnLocalInstance(text);
     }
-
-    [ClientRpc]
-    public void RpcDebugOnAll(string v) {
+    /// <summary>sends debugs from server to clients, but doesn't show who called it. </summary>
+    [ClientRpc]public void RpcDebugOnAll(string v) {
         Debug.Log(v);
     }
 
@@ -86,7 +85,6 @@ public class TextManager : NetworkBehaviour {
         if (spawnedGreenMessage)
             NetworkServer.Destroy(spawnedGreenMessage);
         spawnedGreenMessage = Instantiate(GreenTopLeftMessagePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        NetworkServer.Spawn(spawnedGreenMessage);
         spawnedGreenMessage.GetComponent<GameMessage>().RpcUpdateText(m);
         yield return new WaitForSeconds(time);
         if (spawnedGreenMessage)

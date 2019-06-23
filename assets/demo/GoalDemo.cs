@@ -20,7 +20,7 @@ public class GoalDemo : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if(CurrQuest!=null)
-            ObjTextBox.text = CurrQuest.questMessage ;
+            ObjTextBox.text = CurrQuest.getMessage();
 
 
 	}

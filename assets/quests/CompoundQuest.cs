@@ -55,7 +55,7 @@ public class CompoundQuest:Quest{
         quest1.tick();
         quest2.tick();
         quest3.tick();
-        bool shouldEnd = true;
+        bool shouldEnd = false;
         foreach (GameObject p in players) {//the purpose of this loop is to wait for all players to finish
             PlayerData pd = p.GetComponent<PlayerData>();
             if (pd != null) {//end quest if every one completed 
@@ -84,7 +84,7 @@ public class CompoundQuest:Quest{
             reward = quest3.reward;
             winners = quest3.winners;
             //winners.AddRange(quest2.winners);
-            //questCompleted();
+            questCompleted();
             return;
         }
         if (quest1.isComplete&& quest2.isComplete) {
@@ -97,7 +97,7 @@ public class CompoundQuest:Quest{
                 }
             }
 
-            //questCompleted();
+            questCompleted();
             return;
         } else if (quest1.isComplete) {
             if (questMessage != quest2.getMessage()) {

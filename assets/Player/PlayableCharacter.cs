@@ -88,6 +88,10 @@ public class PlayableCharacter : NetworkBehaviour {
     }
     
     [ClientRpc]public void RpcPlayerDied(Vector3 newSpawnPos) {
+        //respawn the player
+        //transform.position = newSpawnPos;
+        //RD.currentHealth = RD.maxHealth;
+        //RD.didWeCheckDeath = false;
         StartCoroutine(deathCo(newSpawnPos,3));
     }
 

@@ -7,6 +7,7 @@ public class ShipRecieveDamage : NetworkBehaviour
 {
     public GameObject onDamageEffect;
     public GameObject onDeathEffect;
+    public SimpleHealthBar SHB;
     [SerializeField] private int maxHealth = 5;
     [SyncVar] public int currentHealth = 5;
 
@@ -30,7 +31,17 @@ public class ShipRecieveDamage : NetworkBehaviour
             Destroy(collider.gameObject);
         }
     }
+    void updateHeathBar() {
+        if (!SHB)
+            return;
+        if(currentHealth>=1)
+            SHB.UpdateBar(currentHealth-1, maxHealth);
+        else
+            SHB.UpdateBar(0, maxHealth);
+
+    }
     void TakeDamage(int amount) {
+        updateHeathBar();
         if (!isServer)
             return;
         currentHealth -= amount;

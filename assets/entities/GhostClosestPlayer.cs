@@ -11,10 +11,8 @@ public class GhostClosestPlayer : NetworkBehaviour {
     public Animator animator;
     public Collider2D playerBoundingCollider;
     [SerializeField] private float speed = 3f;
-    [SerializeField] private float m_JumpForce = 400f;
-    [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;
     [SerializeField]private float focusTimePeriod =3.0f;
-
+    [SerializeField] private float tickTimePeriod = 0f;
     [HideInInspector] public bool dead = false;
 
 
@@ -28,10 +26,12 @@ public class GhostClosestPlayer : NetworkBehaviour {
         animator = GetComponent<Animator>();
     }
 
-    private float timeLeft;
+
+    private float focusTimeLeft;
+    private float tickTimeLeft;
     // Use this for initialization
     void Start() {
-        timeLeft = focusTimePeriod;
+        focusTimeLeft = focusTimePeriod;
     }
 
 
@@ -39,22 +39,33 @@ public class GhostClosestPlayer : NetworkBehaviour {
 
 
 
+
     GameObject target;
+    bool inited = false;
 	void Update () {
         if (dead)
             return;
-        if(!target)
-            target= findClosestTarget();
-        if(target)
-            tick();
 
+        focusTimeLeft -= Time.deltaTime;
 
-        timeLeft -= Time.deltaTime;
-        if (timeLeft <= 0f) {
-
-            timeLeft = focusTimePeriod;
+        if (focusTimeLeft <= 0f || !inited) {
+            inited = true;
+            focusTimeLeft = focusTimePeriod;
             target = findClosestTarget();
         }
+        if (!target)
+            return;
+
+
+        tickTimeLeft -= Time.deltaTime;
+        if (tickTimeLeft <= 0f) {
+            if (target)
+                tick();
+
+            tickTimeLeft = tickTimePeriod;
+        }
+
+
     }
 
     void tick() {

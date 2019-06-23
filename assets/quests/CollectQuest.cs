@@ -10,7 +10,7 @@ public class CollectQuest : Quest
 
     private GameObject center;
 
-    private float threshold= 2f;
+    private float threshold= 4f;
 
     private Vector3 spawnPosition;
     private float spawnrange;

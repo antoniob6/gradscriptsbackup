@@ -44,20 +44,37 @@ public class QuestManager : MonoBehaviour {
     //note that NOT quest is allways allowed
     //recursvie means that it allows AND quest and OR quest otherwize it'll repeat recursvely
     int playerCount;
+    int questindex = -1;
+    
     public Quest createRandomQuest(List<GameObject> players, GameManager GM,
         bool allowAND = true,QuestTypes[] usedQuests=null) {
 
         playerCount = players.Count;
 
-
+        //return new SurviveQuest(players, GM);
+        //return new GuardQuest(players, GM);
         //return new FollowQuest(players, GM);
         //return new BossQuest(players, GM);
         if (allowAND) {
+           // questindex = 0;
             //return new CompoundQuest(players, GM);
+
             //return new ANDQuest(players, GM);
             //return new NOTQuest( new KillQuest(players, GM) );
 
         }
+        if (questindex == 0) {
+            questindex++;
+            return new GuardQuest(players, GM);
+        }else if(questindex == 1) {
+            questindex++;
+            return new CollectQuest(players, GM);
+        } else if (questindex == 2) {
+            questindex++;
+            return new SurviveQuest(players, GM);
+        }
+
+
 
         float rand = (float)new sysRand().NextDouble();
         bool choseANDORQuest = true;
@@ -156,9 +173,12 @@ public class QuestManager : MonoBehaviour {
 
         MapManager MM = FindObjectOfType<MapManager>();
         if (MM&& MM.finishedCreatingPlatforms) {
-            if(MM.isPlatformsOnly)  //remove boss quest because for platform only map
-                if(qts.Contains(QuestTypes.boss))
+            if (MM.isPlatformsOnly) { //remove boss quest because for platform only map
+                if (qts.Contains(QuestTypes.boss))
                     qts.Remove(QuestTypes.boss);
+                if (qts.Contains(QuestTypes.guard))
+                    qts.Remove(QuestTypes.guard);
+            }
         }
 
 

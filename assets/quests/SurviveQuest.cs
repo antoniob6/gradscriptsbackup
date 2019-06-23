@@ -14,11 +14,11 @@ public class SurviveQuest : Quest {
     private GameObject center;
     private Vector3 spawnPosition;
     private float spawnrange;
-    private List<GameObject> enemies;
-
+    public List<GameObject> enemies = new List<GameObject>();
 
     private string originalQM;
     private int oldTime;
+    private float spawnEvery = 1;
 
     public SurviveQuest(List<GameObject> _players, GameManager _GM) : base() {
         players = _players;
@@ -26,6 +26,11 @@ public class SurviveQuest : Quest {
         reward = Random.Range(50, 500);
         reward =(int) timeLeft * 5;
         questMessage = "stay alive";
+
+
+        spawnEvery = (float)players.Count ;
+        if (spawnEvery < 1f)
+            spawnEvery = 1f;
         //GM.startSpawingEnemies();
         updateQuestMessage();
 
@@ -39,6 +44,7 @@ public class SurviveQuest : Quest {
         if (isComplete)
             return;
         base.tick();
+
         bool allDied = true;
         foreach (GameObject p in players) {
             if (!p) {
@@ -56,6 +62,8 @@ public class SurviveQuest : Quest {
         }
         if (allDied)
             questCompleted();
+
+        checkAndAddEnemies();
     }
 
 
@@ -90,6 +98,24 @@ public class SurviveQuest : Quest {
         return "stay alive";
     }
 
+    float lastSpawnTime = 0;
+    public void checkAndAddEnemies() {
+        if (Time.time - lastSpawnTime >= 3/spawnEvery) {
+            lastSpawnTime = Time.time;
+            if (!GM.MM)
+                return;
+
+            Vector3 randPos = GM.MM.getRandomPositionAboveMap();
+            Vector3 updir = GravitySystem.instance.getUpDirection(randPos);
+            updir = (updir * 40) + randPos;
+
+            //Debug.Log("spawning shipkiller: " + updir);
+            GameObject GO = GM.networkSpawn("playerKillerPrefab", updir);
+            enemies.Add(GO);
+        }
+
+    }
+
 
     public override bool didPlayerLose(PlayerData PD = null) {
         if (PD == null)
@@ -101,7 +127,10 @@ public class SurviveQuest : Quest {
 
     public override void DestroyQuest() {
         //GM.stopSpawingEnemies();
-
+        foreach (GameObject enemy in enemies) {
+            if (enemy)
+                GM.networkDestroy(enemy);
+        }
     }
 
 

@@ -48,7 +48,7 @@ public class PlayerData : NetworkBehaviour
         PCO = GetComponent<PlayerConnectionObject>();
         PRD = GetComponent<PlayerReceiveDamage>();
 
-        if (isServer && playerName != "default") { 
+        if (isServer && playerName == "default") { 
             playerName = "player " + new System.Random().Next(1,100) ;
         }
     }
@@ -85,8 +85,11 @@ public class PlayerData : NetworkBehaviour
         score += s;
         scoreField.text = "score: " + score.ToString();
         //Debug.Log("score updated");
-        if (!PCO.playerBoundingCollider)
+        if (!PCO.playerBoundingCollider) {
+            Debug.Log("returning because there is no PBC");
             return;
+        }
+        //Debug.Log("displaying added score:"+s);
         if(s>0)
             TextManager.instance.createTextOnLocalInstance(PCO.playerBoundingCollider.gameObject.transform.position, "+" + (int)(s));
         else if(s<0)
@@ -150,8 +153,8 @@ public class PlayerData : NetworkBehaviour
             return;
 
         CmdPlayerAgainBtn();
-        PAB.gameObject.SetActive(false);
-        FinalScoresImage.gameObject.SetActive(false);
+      //  PAB.gameObject.SetActive(false);
+       // FinalScoresImage.gameObject.SetActive(false);
         //  Debug.Log("player ready and Btn disabled");
     }
     [Command]

@@ -30,6 +30,7 @@ GameObject:
   - component: {fileID: 114764965643000588}
   - component: {fileID: 114220998495793788}
   - component: {fileID: 114986602221398850}
+  - component: {fileID: 114766562073646992}
   m_Layer: 0
   m_Name: SmartEnemy
   m_TagString: Enemy
@@ -166,7 +167,7 @@ MonoBehaviour:
   onDeathEffect: {fileID: 0}
   onDamageEffect: {fileID: 0}
   maxHealth: 3
-  currentHealth: 0
+  currentHealth: 3
   destroyWhenDead: 1
 --- !u!114 &114346369984241842
 MonoBehaviour:
@@ -231,6 +232,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33db6852e7dee24d87897cdc2fe092a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114766562073646992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1751713478320706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 2
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.2
+  m_VelocityThreshold: 0.2
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114951735677199032
 MonoBehaviour:
   m_ObjectHideFlags: 1

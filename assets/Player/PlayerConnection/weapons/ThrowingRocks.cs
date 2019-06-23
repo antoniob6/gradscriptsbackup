@@ -18,7 +18,7 @@ public class ThrowingRocks : MonoBehaviour
     private void Update() {
         if (active && Input.GetMouseButtonDown(0)&& Time.time - lastTpTime >= coolDownTime) {
             lastTpTime = Time.time;
-            AudioManager.instance.play("throw");
+            //AudioManager.instance.play("throw");
             parentCO.GetComponent<ShootBullets>().Shoot();
         }
 

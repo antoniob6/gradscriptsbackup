@@ -33,7 +33,7 @@ public class GameManager : NetworkBehaviour {
     public GameObject shipPrefab;
     public GameObject shipKillerPrefab;
 
-
+    public GameObject playerKillerPrefab;
     [Header("Other attributes")]
     public float questTimeLimit;
     public GameObject enemieSpawner;
@@ -123,10 +123,14 @@ public class GameManager : NetworkBehaviour {
     int playerCount = 0;
     string[] playerNames;
     GameObject[] oldPlayers;
+    bool firstCheckCompleted = false;
+
+    public bool devmode = true;
     void Update() {
         if (!starting || !isServer)
             return;
-      
+
+        checkSpawnables();
 
         GameObject[] curplayers = GameObject.FindGameObjectsWithTag("Player");
 
@@ -137,16 +141,18 @@ public class GameManager : NetworkBehaviour {
         //    return;
         //}
 
-        if (playerCount > curplayers.Length) {//a player disconnected
+        if (firstCheckCompleted && playerCount > curplayers.Length) {//a player disconnected
             TextManager.instance.displayMessageToAll("player has disconnected",5);
-            Debug.Log("player disconnected");
+            TextManager.instance.RpcDebugOnAll("player disconnected");
         }
-        if (playerCount < curplayers.Length) {//a player connected
+        if (firstCheckCompleted && playerCount < curplayers.Length) {//a player connected late
+            
             MM.syncAllMaps();
-            foreach (Quest q in activeQuests) {
-                q.updateQuestMessage();
-            }
-            TextManager.instance.RpcDebugOnAll("player increased: " + curplayers.Length);
+            ForceQuestsToComplete();
+            //foreach (Quest q in activeQuests) {
+            //    q.updateQuestMessage();
+            //}
+            TextManager.instance.RpcDebugOnAll("player connected late: " + curplayers.Length);
 
         }
         if (playerCount != curplayers.Length) {
@@ -154,7 +160,7 @@ public class GameManager : NetworkBehaviour {
             playerCount = curplayers.Length;
             playerNames = new string[curplayers.Length];
             //oldPlayers = new GameObject[curplayers.Length];
-            for (int i = 0; i < curplayers.Length; i++) {
+            for (int i = 0; i < curplayers.Length; i++) {//need to manually add because of null values(disconnection)
                 if (!curplayers[i])
                     continue;
                 players.Add(curplayers[i]);
@@ -183,17 +189,25 @@ public class GameManager : NetworkBehaviour {
         checkRounds();
 
         if (Input.GetKeyDown(KeyCode.G)) {
-            //  displayMessageToAll("testing message: hello this is a test message");
+            TextManager.instance.displayMessageToAll("host force changing map");
             changeMap();
         }
         if (Input.GetKeyDown(KeyCode.H)) {
+            TextManager.instance.displayMessageToAll("host force changing goal");
             activeQuests.Clear();
         }
         if (Input.GetKeyDown(KeyCode.J)) {
-           // TextManager.instance.createTextOnAll(transform.position, "90");
+            if (devmode) {
+                devmode = false;
+            } else {
+                devmode = true;
+                TextManager.instance.displayMessageToAll("host force limited rules");
+
+
+            }
         }
 
-        if (changeMapb) {
+        if (changeMapb) {//provides a way for inspector to call funtion
             changeMapb = false;
             changeMap();
         }
@@ -202,11 +216,18 @@ public class GameManager : NetworkBehaviour {
             activeQuests.Clear();
         }
 
+        firstCheckCompleted = true;
+
     }
 
 
     private void randomRules() {
-        currentRules = new Rules();
+        if (currentRules == null)
+            currentRules = new Rules();
+        currentRules.randomizeRules();
+        if(devmode)
+            currentRules.randomizeDevRules();
+
         GravitySystem.instance.gravityForce = currentRules.gravityForce;
         if (currentRules.isCircle)
             GravitySystem.instance.gravityType = 
@@ -290,7 +311,9 @@ public class GameManager : NetworkBehaviour {
         }
 
     }
+
     public void startNewRound() {
+
         foreach (GameObject p in players) {
             if (p)
                 p.GetComponent<PlayerData>().resetRoundStats();
@@ -298,8 +321,9 @@ public class GameManager : NetworkBehaviour {
         Quest l = QM.createRandomQuest(players, this);
         Debug.Log("created: " + l.questMessage);
         if (l != null) {
+
             activeQuests.Add(l);
-            TextManager.instance.displayMessageToAll("Waiting for players to get ready", 100);
+            TextManager.instance.displayMessageToAll("Waiting for players to get ready", 15);
             CancelInvoke("completeQuests");
 
             
@@ -333,8 +357,8 @@ public class GameManager : NetworkBehaviour {
     public void setDifficulty() {
         clearDifficullty();
 
-        int numOfEnemies = currentRound * 20 + (int)currentRules.length / 100;
-       // Debug.Log("spawnning " + numOfEnemies + " enemies");
+        int numOfEnemies = currentRound * 5+ (int)currentRules.length / 100;
+        //Debug.Log("spawnning " + numOfEnemies + " enemies");
         for(int i = 0; i < numOfEnemies; i++) {
             Vector3 randomLocation = MM.getRandomPositionAboveMap();
 
@@ -368,46 +392,83 @@ public class GameManager : NetworkBehaviour {
             pdata.RpchasDied(false);
         }
     }
-
+    List<GameObject> spawnedBullets = new List<GameObject>();
+    List<GameObject> toSpawnList = new List<GameObject>();
     [Server]
     public GameObject networkSpawn(string message,Vector3 position)
     {
-        if (message == "locationPrefab")
-        {
-            GameObject enemy = Instantiate(foundablePrefab, position, Quaternion.identity) as GameObject;
-            NetworkServer.Spawn(enemy);
-            return enemy;
-        }
-        if (message == "candyPrefab") {
-            GameObject enemy = Instantiate(candyPrefab, position, Quaternion.identity) as GameObject;
-            NetworkServer.Spawn(enemy);
-            return enemy;
-        }
-        if (message == "bossPrefab") {
-            GameObject enemy = Instantiate(bossPrefab, position, Quaternion.identity) as GameObject;
-            NetworkServer.Spawn(enemy);
-            return enemy;
-        }
-        if (message == "enemyPrefab") {
-            GameObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity) as GameObject;
-            NetworkServer.Spawn(enemy);
-            return enemy;
-        }
-        if (message == "shipPrefab") {
-            GameObject enemy = Instantiate(shipPrefab, position, Quaternion.identity) as GameObject;
-            NetworkServer.Spawn(enemy);
-            return enemy;
-        }
-        if (message == "shipKillerPrefab") {
-            GameObject enemy = Instantiate(shipKillerPrefab, position, Quaternion.identity) as GameObject;
-            NetworkServer.Spawn(enemy);
-            return enemy;
+
+        if (spawnedBullets.Count >=100) {
+                if (spawnedBullets[0] != null) {
+                    NetworkServer.Destroy(spawnedBullets[0]);
+
+                   // Debug.Log("server removing bullet" + spawnedBulletsTime.Count + " " + spawnedBullets.Count);
+                }
+                spawnedBullets.RemoveAt(0);
+
+            
         }
 
+        GameObject enemy=null;
+        if (message == "locationPrefab")
+        {
+            enemy = Instantiate(foundablePrefab, position, Quaternion.identity) as GameObject;
+
+        }
+        if (message == "candyPrefab") {
+            enemy = Instantiate(candyPrefab, position, Quaternion.identity) as GameObject;
+
+        }
+        if (message == "bossPrefab") {
+            enemy = Instantiate(bossPrefab, position, Quaternion.identity) as GameObject;
+
+        }
+        if (message == "enemyPrefab") {
+            enemy = Instantiate(enemyPrefab, position, Quaternion.identity) as GameObject;
+
+        }
+        if (message == "shipPrefab") {
+           enemy = Instantiate(shipPrefab, position, Quaternion.identity) as GameObject;
+
+        }
+        if (message == "shipKillerPrefab") {
+           enemy = Instantiate(shipKillerPrefab, position, Quaternion.identity) as GameObject;
+
+        }
+        if (message == "playerKillerPrefab") {
+            enemy = Instantiate(playerKillerPrefab, position, Quaternion.identity) as GameObject;
+
+        }
+        if (enemy) {
+            toSpawnList.Add(enemy);
+            spawnedBullets.Add(enemy);
+
+            return enemy;
+        }
 
         Debug.LogError("name error in GM.networkSpawn()");
         return null;
     }
+    public float lastSpawnTime = 0;
+    public void checkSpawnables() {
+        if (!isServer)
+            return;
+
+        if(Time.time - lastSpawnTime >= 0.2) {
+            if (toSpawnList.Count >= 1) {
+                if (toSpawnList[0]) {
+                    NetworkServer.Spawn(toSpawnList[0]);
+                    //Debug.Log("spawning network Object");
+                    lastSpawnTime = Time.time;
+                }
+                toSpawnList.RemoveAt(0);
+
+            }
+
+        }
+    }
+
+
     [Server]
     public void networkDestroy(GameObject toDestroy) {
         NetworkServer.Destroy(toDestroy);
@@ -471,7 +532,7 @@ public class GameManager : NetworkBehaviour {
                 readyCount++;
         }
 
-        if ((float)readyCount / players.Count >= 0.4f) {
+        if ((float)readyCount / players.Count >= 0.6f) {
             //about  half the players ready so start the game
            // Debug.Log("starting new game");
 

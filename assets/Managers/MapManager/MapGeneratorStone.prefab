@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114700722358579206}
   - component: {fileID: 60741455822140970}
   m_Layer: 0
-  m_Name: MapGenerator
+  m_Name: MapGeneratorStone
   m_TagString: GravityCenter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 7decc0f56854b444cbf07172dd70c6df, type: 2}
+  - {fileID: 2100000, guid: 3eb079016c4106b41bc3f19de570f770, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,22 +153,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 9
-    i1: 252
-    i2: 149
-    i3: 242
-    i4: 102
-    i5: 252
-    i6: 88
-    i7: 180
-    i8: 57
-    i9: 149
-    i10: 140
-    i11: 11
-    i12: 197
-    i13: 189
-    i14: 156
-    i15: 5
+    i0: 230
+    i1: 189
+    i2: 151
+    i3: 61
+    i4: 61
+    i5: 93
+    i6: 42
+    i7: 196
+    i8: 187
+    i9: 182
+    i10: 27
+    i11: 69
+    i12: 72
+    i13: 74
+    i14: 162
+    i15: 214
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114797839937540978

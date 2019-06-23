@@ -26,10 +26,10 @@ GameObject:
   - component: {fileID: 114531206561913580}
   - component: {fileID: 114892838871311610}
   - component: {fileID: 61497686281313806}
-  - component: {fileID: 114671560724629748}
   - component: {fileID: 114697322333572262}
+  - component: {fileID: 114564066308470168}
   m_Layer: 0
-  m_Name: ShipKiller
+  m_Name: PlayerKiller
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,22 +132,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 63
-    i1: 79
-    i2: 79
-    i3: 45
-    i4: 143
-    i5: 23
-    i6: 222
-    i7: 228
-    i8: 153
-    i9: 153
-    i10: 131
-    i11: 219
-    i12: 33
-    i13: 74
-    i14: 194
-    i15: 73
+    i0: 26
+    i1: 42
+    i2: 202
+    i3: 229
+    i4: 190
+    i5: 102
+    i6: 218
+    i7: 100
+    i8: 219
+    i9: 1
+    i10: 6
+    i11: 195
+    i12: 170
+    i13: 13
+    i14: 27
+    i15: 128
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114531206561913580
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
---- !u!114 &114671560724629748
+--- !u!114 &114564066308470168
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,10 +179,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1023448067033890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a989855fd7f1942a280a70210b05b2, type: 3}
+  m_Script: {fileID: 11500000, guid: c639266c5e8bfa141952914508a32165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  animator: {fileID: 0}
+  playerBoundingCollider: {fileID: 0}
+  speed: 7
+  focusTimePeriod: 3
+  tickTimePeriod: 0
   dead: 0
 --- !u!114 &114697322333572262
 MonoBehaviour:

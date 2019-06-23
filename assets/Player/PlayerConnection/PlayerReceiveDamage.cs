@@ -54,13 +54,14 @@ public class PlayerReceiveDamage : NetworkBehaviour {
            // Debug.Log("damage prevented: " + (Time.time - lastDamageTime));
             return;
         }
-        lastDamageTime = Time.time;
+
         //Debug.Log("character triggered: "+ currentHealth);
         //hit by bullet
         if (collider.tag == "Bullet" ) {
             //Destroy(collider.gameObject);
             if (isServer && collider.gameObject.GetComponent<Bullet>().owner != gameObject.GetComponent<PlayerReceiveDamage>()) {
                 lastHitby = collider.gameObject.GetComponent<Bullet>().owner.gameObject;
+                NetworkServer.Destroy(collider.gameObject);
                 TakeDamage(1);
             }
 
@@ -102,7 +103,7 @@ public class PlayerReceiveDamage : NetworkBehaviour {
         AudioManager.instance.play("playerGotDamaged");
         if (!isServer)//only server deals actual damage
             return;
-
+        lastDamageTime = Time.time;
         currentHealth -= amount;//reduce the amount of health
 
         if (recieveDamageEffect) {//add an effect that damage was received

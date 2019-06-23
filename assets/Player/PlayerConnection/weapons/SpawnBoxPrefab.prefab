@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 114951735677199032}
   - component: {fileID: 114764965643000588}
   - component: {fileID: 114763527124973220}
+  - component: {fileID: 114909873328918240}
   m_Layer: 0
   m_Name: SpawnBoxPrefab
   m_TagString: Untagged
@@ -42,7 +43,7 @@ Transform:
   m_GameObject: {fileID: 1751713478320706}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -117,7 +118,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1751713478320706}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 631e77ff2ae981e48817e77790b1c26b, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -177,14 +178,14 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 0
+  m_TransformSyncMode: 2
   m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
+  m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
+  m_SnapThreshold: 3
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
 --- !u!114 &114764965643000588
@@ -196,6 +197,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e33db6852e7dee24d87897cdc2fe092a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114909873328918240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1751713478320706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb672c665dbddc4f9672655ab2eadb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114951735677199032

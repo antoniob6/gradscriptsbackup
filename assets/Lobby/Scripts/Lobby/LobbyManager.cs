@@ -63,7 +63,7 @@ namespace Prototype.NetworkLobby
             GetComponent<Canvas>().enabled = true;
 
             DontDestroyOnLoad(gameObject);
-
+            Application.targetFrameRate = 60;
             SetServerInfo("Offline", "None");
         }
 

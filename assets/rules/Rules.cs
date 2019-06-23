@@ -50,7 +50,21 @@ public class Rules  {
 
     }
 
+    public void randomizeDevRules() {
 
+        Radius = Random.Range(20f, 90f);
+        isCircle = Random.Range(0, 2) == 1 ? true : false;
+        if (isCircle)
+            length = Random.Range(300f, 600f);
+        else
+            length = Random.Range(100f, 200f);
+        seed = Random.Range(0, 3000);
+        gravityForce = Random.Range(50f, 100f);
+        jumpHeight = Random.Range(2f, 6f);
+        isReverseGravity = Random.Range(0, 2) == 1 ? false : false;
+        runningSpeed = Random.Range(15f, 70f);
+
+    }
 
 
 

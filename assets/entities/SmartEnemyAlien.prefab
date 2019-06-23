@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 114533998182464246}
   - component: {fileID: 114230358545524990}
   - component: {fileID: 212173266365225574}
+  - component: {fileID: 114053585137275562}
   m_Layer: 0
   m_Name: SmartEnemyAlien
   m_TagString: Enemy
@@ -114,6 +115,27 @@ MonoBehaviour:
   tickTimePeriod: 0
   dead: 0
   target: {fileID: 0}
+--- !u!114 &114053585137275562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1361802489716248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 2
+  m_SendInterval: 0.33333334
+  m_SyncRotationAxis: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.2
+  m_VelocityThreshold: 0.2
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114142336799257276
 MonoBehaviour:
   m_ObjectHideFlags: 1

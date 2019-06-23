@@ -23,7 +23,7 @@ public class PlayerConnectionObject : NetworkBehaviour
 
 
     public bool facingRight = true;
-
+    [SyncVar]public int selectedWeapon = 0;
     private int index = 0;
     
     private void Start() {
@@ -32,14 +32,17 @@ public class PlayerConnectionObject : NetworkBehaviour
             //Debug.Log("not local player on client");
             return;
         }
+        Application.targetFrameRate = 60;
         active = true;
         Invoke("delayedStart", 2f);
 
     }
 
-
+    bool shouldStart = false;
     public void delayedStart() {
+        spawnTime = Time.time;
         CmdSpawnMyUnit();
+        shouldStart = true;
     }
 
 
@@ -47,10 +50,21 @@ public class PlayerConnectionObject : NetworkBehaviour
     public string PlayerName = "Anonymous";
 
     // Update is called once per frame
+
+
+    float spawnTime;
     void Update() {
         if (!isLocalPlayer) {
             return;
         }
+        if (shouldStart&& playerBoundingCollider==null) {//try spawning automaticly if failed after 5 seconds
+            if(Time.time-spawnTime > 5f) {
+                spawnTime = Time.time;
+                CmdSpawnMyUnit();
+
+            }
+        }
+      
 
         if (Input.GetKeyDown(KeyCode.C)) {
 
@@ -60,7 +74,7 @@ public class PlayerConnectionObject : NetworkBehaviour
                 index++;
             }
             Debug.Log("changing character "+ index);
-
+            spawnTime = Time.time;
             CmdSpawnMyUnit();
         }
 
@@ -74,6 +88,7 @@ public class PlayerConnectionObject : NetworkBehaviour
 
     [Command]
     public void CmdSpawnMyUnit() {
+        
         Vector3 up = GravitySystem.instance.getUpDirection(transform.position);
         Vector3 spawnPoint = transform.position+up*2;//old character position
 
@@ -179,5 +194,30 @@ public class PlayerConnectionObject : NetworkBehaviour
 
     }
 
-    
+
+    public void changeWeapon(int newWeapon) {
+        if (isLocalPlayer)
+            CmdChangeWeapon(newWeapon);
+    }
+    [Command]public void CmdChangeWeapon(int n) {
+        selectedWeapon = n;
+        Debug.Log("changing weapon on server");
+        RpcChangeWeapon( n);
+    }
+    [ClientRpc]
+    public void RpcChangeWeapon(int n) {
+        if (isLocalPlayer)//script already works on local player
+            return;
+
+        Debug.Log("changing weapon on clients");
+        WeaponSwitching WS= GetComponentInChildren<WeaponSwitching>();
+        if (!WS) {
+            Debug.Log("cant find WS script");
+            return;
+        }
+        WS.selectedWeapon = n;
+        WS.selectWeapon();
+    }
+
+
 }
